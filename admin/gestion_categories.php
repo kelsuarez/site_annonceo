@@ -20,16 +20,19 @@ $pagination = 5;
 $nombrePages = ceil($nombreCategories / $pagination);
 $premierCategorie = ($pageCourante - 1) * $pagination;
 
-// URL = ACTION
+// REQUETTE GET POUR TRAVAIILLER SUR L'URL
 if (isset($_GET['action'])) {
 
     if ($_POST) {
+
+        // REQUETTE DE CONTRAINTES
         if (!isset($_POST['titre']) || !preg_match('#^[a-zA-Zé]{3,30}$#', $_POST['titre'])) {
             $erreur .= '<div class="alert alert-danger" role="alert">Erreur format titre !</div>';
         }
         if (!isset($_POST['motscles']) || !preg_match('#^[a-zA-Z -_.é^ô]{3,150}$#', $_POST['motscles'])) {
             $erreur .= '<div class="alert alert-danger" role="alert">Erreur format motscles !</div>';
         }
+        // REQUETTE DE SI PAS DE ERREUR ON PEUT CONTINUER
         if (empty($erreur)){
             if ($_GET['action'] == 'update') {
                 $modifCategorie = $pdo->prepare("UPDATE categorie SET id_categorie = :id_categorie, titre = :titre, motscles = :motscles WHERE id_categorie = :id_categorie");
@@ -56,9 +59,11 @@ if (isset($_GET['action'])) {
     $titre = (isset($categorieActuel['titre'])) ? $categorieActuel['titre'] : "";
     $motsCles = (isset($categorieActuel['motscles'])) ? $categorieActuel['motscles'] : "";
 
+    // REQUETE - DELETE
     if($_GET['action'] == 'delete'){
         $pdo->query(" DELETE FROM categorie WHERE id_categorie = '$_GET[id_categorie]' ");
     }
+    
 }
 
 require_once('includeAdmin/header.php');
@@ -81,7 +86,8 @@ require_once('includeAdmin/header.php');
 
     <form class="my-5" method="POST" action="">
         
-        <input type="hidden" name="id_categorie" value="<?= $id_categorie ?>">
+        <!-- HIDDEN -->
+        <input type="" name="id_categorie" value="<?= $id_categorie ?>">
 
 
             <!-- TITRE -->
@@ -143,8 +149,9 @@ require_once('includeAdmin/header.php');
                 <?php foreach ($user as $key => $value) : ?>
                         <td><?= $value ?></td>
                 <?php endforeach; ?>
-                <td><a href='?action=update&id_categorie=<?= $user['id_categorie'] ?>'><i class="bi bi-pen-fill text-warning"></i></a></td>
-                <td><a data-href="?action=delete&id_categorie=<?= $user['id_categorie'] ?>" data-toggle="modal" data-target="#confirm-delete"><i class="bi bi-trash-fill text-danger" style="font-size: 1.5rem;"></i></a></td>
+                <td><a href='?action=update&id_categorie=<?= $user['id_categorie'] ?>'><i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i></a></td>
+                <td><a href='?action=see&id_categorie=<?= $user['id_categorie'] ?>'><i class="bi bi-eye" style="font-size: 1.5rem;"></i></a></td>
+                <td><a data-href="?action=delete&id_categorie=<?= $user['id_categorie'] ?>" data-toggle="modal" data-target="#confirm-delete"><i class="bi bi-trash" style="font-size: 1.5rem;"></i></a></td>
             </tr>
         <?php endwhile; ?>
     </tbody>

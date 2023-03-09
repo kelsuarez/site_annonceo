@@ -1,7 +1,20 @@
 <?php
 require_once('include/init.php');
 
-
+// RECUPERATION EN BDD DES INFORMATION ANNONCE --- SELECT * FROM annonce WHERE id_annone = :id_annonce --- ($_GET['...'])
+// FETCH
+// NOUVELLE REQUETE POUR RECUPERER LES PHOTOS ANNEXES --- SELECT * FROM photo WHERE id_photo = :id_photo --- (:id_photo provient de photo_id récupéré via la requete précédente)
+// POUR l'AFFICHAGE : FAIRE UN IF QUI VERIFIE S'IL Y A BIEN UNE PHOTO
+/*
+$photo = $liste_photo->fetch(PDO::FETCH_ASSOC)
+foreach($photo AS $indice => $valeur) {
+    if($indice != 'id_photo') {
+        if(!empty($valeur)) {
+            echo '<img src="' . $chemin . $valeur . '">';
+        }
+    }
+} 
+*/
 
 // code a venir
 require_once('include/affichage.php');

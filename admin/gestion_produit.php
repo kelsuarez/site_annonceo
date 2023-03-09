@@ -1,397 +1,481 @@
 <?php
 require_once('../include/init.php');
 
+// CONNEXION ADMIN
 if (!internauteConnecteAdmin()) {
     header('location:' . URL . 'connexion.php');
     exit();
 }
 
-// pagination selon produits
+// PAGINATION
+if(isset($_GET['page']) && !empty($_GET['page'])){
+    $pageCourante = (int) strip_tags($_GET['page']);
+}else{
+    $pageCourante = 1;
+}
+$queryAnnonces = $pdo->query(" SELECT COUNT(id_annonce) AS nombreAnnonces FROM annonce ");
+$resultatAnnonces = $queryAnnonces->fetch();
+$nombreAnnonces = (int) $resultatAnnonces['nombreAnnonces'];
+$parPage = 10;
+$nombrePages = ceil($nombreAnnonces / $parPage);
+$premierAnnonce = ($pageCourante - 1) * $parPage;
 
-// si un indice page existe dans l'URL et qu'on trouve une valeur dedans
-// if(isset($_GET['page']) && !empty($_GET['page'])){
-    // alors on declare une variable $pageCourante ($currentPage) à laquelle on va affecter la valeur véhiculée par l'indice page dans l'URL
-    // protection de ce qui sera véhiculé dans l'URL avec strip_tags ou htmlspecialchars, plus on force le typage de l'information dans l'URL avec (int) pour indiquer qu'on ne veut pas recevoir autre chose qu'un nombre entier
-    // $pageCourante = (int) strip_tags($_GET['page']);
-// }else{
-    // dans le cas ou aucune information n'a transité dans l'URL, $pageCourante prendra la valeur par défaut de 1 (nous sommes sur la première page)
-    // $pageCourante = 1;
-// }
+$id_annonce = "";
+$titre = "";
+$description_courte = "";
+$description_longue = "";
+$prix =  "";
+$pays =  "";
+$ville = "";
+$adresse =  "";
+$cp =  "";
+$id_membre = $_SESSION['membre']['id_membre'];
+$photo_id = "";
+$categorie_id = "";
+$photo_actuelle = "";
 
-// je dois connaitre le nombre de produits en BDD pour établir mon système de pagination
-// je connais déjà ce nombre (voir en haut) avec un rowCount. La syntaxe qui va suivre est plus longue et compliqué (voir différentes manières de faire) mais elle sera plus rapide à l'exécution que rowCount (intéressant si le nb de produits se compte en milliers)
-// $queryProduits = $pdo->query(" SELECT COUNT(id_produit) AS nombreProduits FROM produit ");
-// le fetch après le query pour récupérer le nombre (pas besoin de fetch_assoc ou autre, je ne vais cibler aucune colonne, je veux récupérer un nombre total)
-// $resultatProduits = $queryProduits->fetch();
-// $nombreProduits = (int) $resultatProduits['nombreProduits'];
-// echo debug($nombreProduits);
+$photoBdd1 = "";
+$photoBdd2 = "";
+$photoBdd3 = "";
+$photoBdd4 = "";
+$photoBdd5 = "";
 
-// je veux que sur chaque page, ne s'affiche dans le tableau que 10 produits
-// $parPage = 10;
-// calcul pour savoir combien de pages devront etre générées (nb évolutif, dynamique, le nombre de pages dont j'ai besoin aujourd'hui sera insuffisant dans un an)
-// utilisation de ceil(), fonction prédéfinie qui arrondi à l'unité supérieur si le résultat de la division est un chiffre à virgule ( il n'existe 3,5 pages, on a besoin de 4 pages)
-// $nombrePages = ceil($nombreProduits / $parPage);
-// définir le premier produit qui va s'afficher à chaque nouvelle page (on va le cibler grace à l'indice qu'il occupe dans le tableau)
-// $premierProduit = ($pageCourante - 1) * $parPage;
+//&& !empty($_POST)
 
-// fin de pagination
+// REQUETTE GET POUR TRAVAIILLER SUR L'URL
+if(isset($_GET['action'])){
 
-if (isset($_GET['action'])) {
-
-    if ($_POST) {
+    if ($_POST){
         // TITRE
-        if (!isset($_POST['titre']) || !preg_match('#^[a-zA-Z0-9 -._]{5,50}$#', $_POST['titre'])) {
+        if(!isset($_POST['titre']) || !preg_match('#^[a-zA-Z0-9 -_.éà\'è]{2,50}$#', $_POST['titre'])){
             $erreur .= '<div class="alert alert-danger" role="alert">Erreur format titre !</div>';
         }
         // DESCRIPTION COURTE
-        if (!isset($_POST['description_courte']) || !preg_match('#^[a-zA-Z0-9 -._]{5,100}$#', $_POST['description_courte'])) {
-            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format de description courte !</div>';
+            if(!isset($_POST['description_courte']) || iconv_strlen($_POST['description_courte']) <1 || iconv_strlen($_POST['pays']) > 200 ){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format description courte !</div>';
         }
         // DESCRIPTION LONGUE
-        if (!isset($_POST['description_longue']) || !preg_match('#^[a-zA-Z0-9 -._]{5,200}$#', $_POST['description_longue'])) {
-            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format de description longue !</div>';
+        if(!isset($_POST['description_longue']) || iconv_strlen($_POST['description_longue']) <1 || iconv_strlen($_POST['pays']) > 200 ){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format description longue !</div>';
         }
         // PRIX
-        if (!isset($_POST['prix']) || !preg_match('#^[0-9]{1,9}$#', $_POST['prix'])) {
-            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format prix !</div>';
+        if(!isset($_POST['prix']) || !preg_match('#^[0-9]{1,10}$#', $_POST['prix'])){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format code prix !</div>';
         }
-        // --------------------------------------------------------
+        // CATEGORIE
+        if(!isset($_POST['categorie'])){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format categorie !</div>';
+        }
         // PHOTO
-        // --------------------------------------------------------
-        // --------------------------------------------------------
+        if(isset($_FILES['fichier']) && $_FILES['fichier']['error'] == 0) {
+            if ($_FILES['fichier']['size'] > $_POST['MAX_FILE_SIZE']) {
+                echo "Le fichier téléchargé est trop volumineux.";
+            }
+            $allowed = array('pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'jpeg', 'png');
+            $filename = $_FILES['fichier']['name'];
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            if(!in_array($ext, $allowed)) {
+                echo "Le type de fichier n'est pas autorisé.";
+            }
+        }
         // PAYS
-        // --------------------------------------------------------
+        if(!isset($_POST['pays']) || iconv_strlen($_POST['pays']) < 3 || iconv_strlen($_POST['pays']) > 20 ){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format pays !</div>';
+        }
         // VILLE
         if(!isset($_POST['ville']) || strlen($_POST['ville']) < 2 || strlen($_POST['ville']) > 30 ){
             $erreur .= '<div class="alert alert-danger" role="alert">Erreur format ville !</div>';
         }
-        // ADRESSE
+        //ADRESSE
         if(!isset($_POST['adresse']) || strlen($_POST['adresse']) < 5 || strlen($_POST['adresse']) > 50 ){
             $erreur .= '<div class="alert alert-danger" role="alert">Erreur format adresse !</div>';
         }
         // CODE POSTAL
-        if(!isset($_POST['code_postal']) || !preg_match('#^[0-9]{5}$#', $_POST['code_postal'])){
+        if(!isset($_POST['cp']) || !preg_match('#^[0-9]{5}$#', $_POST['cp'])){
             $erreur .= '<div class="alert alert-danger" role="alert">Erreur format code postal !</div>';
         }
-        // $photo_bdd = "";
+        // TRAITEMENT PHOTO
+        $photoBdd = (!empty($_POST['photo_actuelle'])) ? $_POST['photo_actuelle'] : "";
         // if($_GET['action'] == 'update'){
-        //     $photo_bdd = $_POST['photoActuelle'];
-        // }
-        // if(!empty($_FILES['photo']['name'])){
-        //     $photo_nom = $_POST['titre'] . '_' . $_FILES['photo']['name'];
-        //     $photo_bdd = "$photo_nom";
-        //     $photo_dossier = RACINE_SITE . "img/$photo_nom";
-        //     copy($_FILES['photo']['tmp_name'], $photo_dossier);
+        //     $photoBdd = $_POST['photo_actuelle'];
         // }
 
+        if(!empty($_FILES['photo']['name'])){
+            $photo_nom = uniqid() . '_' . $_FILES['photo']['name'];
+            $photoBdd = "$photo_nom";
+            $photoDossier = RACINE_SITE . "img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+                copy($_FILES['photo']['tmp_name'], $photoDossier);
+            } else {
+                echo "Une erreur est survenue lors du téléchargement du fichier.";
+            }
+        }
+        // A VOIR POUR LES 5 AUTRES PHOTOS
 
+        if(!empty($_FILES['photo1']['name'])){
+            $photo_nom = uniqid() . '_' . $_FILES['photo1']['name'];
+            $photoBdd1 = "$photo_nom";
+            $photoDossier = RACINE_SITE . "img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo1']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+                copy($_FILES['photo1']['tmp_name'], $photoDossier);
+            } else {
+                echo "Une erreur est survenue lors du téléchargement du fichier.";
+            }
+        }
+        if(!empty($_FILES['photo2']['name'])){
+            $photo_nom = uniqid() . '_' . $_FILES['photo2']['name'];
+            $photoBdd2 = "$photo_nom";
+            $photoDossier = RACINE_SITE . "img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo2']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+                copy($_FILES['photo2']['tmp_name'], $photoDossier);
+            } else {
+                echo "Une erreur est survenue lors du téléchargement du fichier.";
+            }
+        }
+        if(!empty($_FILES['photo3']['name'])){
+            $photo_nom = uniqid() . '_' . $_FILES['photo3']['name'];
+            $photoBdd3 = "$photo_nom";
+            $photoDossier = RACINE_SITE . "img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo3']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+                copy($_FILES['photo3']['tmp_name'], $photoDossier);
+            } else {
+                echo "Une erreur est survenue lors du téléchargement du fichier.";
+            }
+        }
+        if(!empty($_FILES['photo4']['name'])){
+            $photo_nom = uniqid() . '_' . $_FILES['photo4']['name'];
+            $photoBdd4 = "$photo_nom";
+            $photoDossier = RACINE_SITE . "img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo4']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+                copy($_FILES['photo4']['tmp_name'], $photoDossier);
+            } else {
+                echo "Une erreur est survenue lors du téléchargement du fichier.";
+            }
+        }
+        if(!empty($_FILES['photo5']['name'])){
+            $photo_nom = uniqid() . '_' . $_FILES['photo5']['name'];
+            $photoBdd5 = "$photo_nom";
+            $photoDossier = RACINE_SITE . "img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo5']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+                copy($_FILES['photo5']['tmp_name'], $photoDossier);
+            } else {
+                echo "Une erreur est survenue lors du téléchargement du fichier.";
+            }
+        }
 
-
-        // if (!isset($_POST['couleur']) || $_POST['couleur'] != 'bleu' && $_POST['couleur'] != 'rouge' && $_POST['couleur'] != 'vert' && $_POST['couleur'] != 'jaune' && $_POST['couleur'] != 'blanc' && $_POST['couleur'] != 'noir' && $_POST['couleur'] != 'marron') {
-        //     $erreur .= '<div class="alert alert-danger" role="alert">Erreur format couleur !</div>';
-        // }
-
-        // if (!isset($_POST['taille']) || $_POST['taille'] != 'small' && $_POST['taille'] != 'medium' && $_POST['taille'] != 'large' && $_POST['taille'] != 'xlarge') {
-        //     $erreur .= '<div class="alert alert-danger" role="alert">Erreur format taille !</div>';
-        // }
-
-        // if (!isset($_POST['public']) || $_POST['public'] != 'enfant' && $_POST['public'] != 'femme' && $_POST['public'] != 'homme' && $_POST['public'] != 'mixte') {
-        //     $erreur .= '<div class="alert alert-danger" role="alert">Erreur format public !</div>';
-        // }
-
-        // condition pour modifier une photo
-        // if($_GET['action'] == 'update'){
-            // A mettre en relation avec la nouvelle photo que l'on veut insérer en BDD pour remplacer l'ancienne
-            // $photo_bdd = $_POST['photoActuelle'];
-        // }
-
-
-        // if(!empty($_FILES['photo']['name'])){
-            // je donne un nom à la photo que je vais ajouter en concaténant le nom de la référence du produit, avec le nom du fichier photo d'origine (les deux étant séparés d'un underscore ( _ ) )
-            // $photo_nom = $_POST['reference'] . '_' . $_FILES['photo']['name'];
-            // utilisation de la variable photo_bdd pour lui affecter la valeur de photo_nom, sous forme de chaine de caractères (pour les bindValue)
-            // $photo_bdd = "$photo_nom";
-            // declaration d'une variable qui va enregistrer le chemin ou uploader notre fichier (les photos vont aller dans le dossier img de notre projet, en local comme en ligne lorsque le site sera hébergé)
-            // $photo_dossier = RACINE_SITE . "img/$photo_nom";
-            // processus d'envoi du fichier vers le dossier img, en passant par la fonction prédéfinie copy qui va donner un nom temporaire au fichier, avec de l'uploader dans le dossier img avec son nom définitif ($photo_nom)
-        //     copy($_FILES['photo']['tmp_name'], $photo_dossier);
-        // }
-
-        // fin traitement pour la photo
-
-        if (empty($erreur)) {
-            if ($_GET['action'] == 'update') {
-                $modifAnnonce = $pdo->prepare(" UPDATE annonce SET id_annonce  = :id_annonce  , titre = :titre, description_courte = :description_courte, description_longue = :description_longue, prix = :prix, photo = :photo, pays = :pays, ville = :ville, adresse	 = :adresse	, cp = :cp WHERE id_annonce = :id_annonce ");
+        // REQUETTE DE SI PAS DE ERREUR ON PEUT CONTINUER
+        if(empty($erreur)){
+            
+            // REQUETTE DE UPDATE
+            if($_GET['action'] == 'update'){
+                $modifAnnonce = $pdo->prepare("UPDATE annonce SET id_annonce = :id_annonce, titre = :titre, description_courte = :description_courte, description_longue = :description_longue, prix = :prix, pays = :pays, ville = :ville, adresse = :adresse, cp = :cp, prix = :prix, stock = :stock, categorie_id = :categorie_id, photo = :photo  WHERE id_annonce = :id_annonce");
                 $modifAnnonce->bindValue(':id_annonce', $_POST['id_annonce'], PDO::PARAM_INT);
                 $modifAnnonce->bindValue(':titre', $_POST['titre'], PDO::PARAM_STR);
                 $modifAnnonce->bindValue(':description_courte', $_POST['description_courte'], PDO::PARAM_STR);
                 $modifAnnonce->bindValue(':description_longue', $_POST['description_longue'], PDO::PARAM_STR);
-                $modifAnnonce->bindValue(':description', $_POST['description'], PDO::PARAM_STR);
                 $modifAnnonce->bindValue(':prix', $_POST['prix'], PDO::PARAM_STR);
-                $modifAnnonce->bindValue(':photo', $_POST['photo'], PDO::PARAM_STR);
                 $modifAnnonce->bindValue(':pays', $_POST['pays'], PDO::PARAM_STR);
                 $modifAnnonce->bindValue(':ville', $_POST['ville'], PDO::PARAM_STR);
-                // $modifAnnonce->bindValue(':ville', $photo_bdd, PDO::PARAM_STR);
                 $modifAnnonce->bindValue(':adresse', $_POST['adresse'], PDO::PARAM_STR);
-                $modifAnnonce->bindValue(':cp', $_POST['cp'], PDO::PARAM_INT);
+                $modifAnnonce->bindValue(':cp', $_POST['cp'], PDO::PARAM_STR);
+                $modifAnnonce->bindValue(':categorie_id', $_POST['categorie'], PDO::PARAM_STR);
+                $modifAnnonce->bindValue(':photo', $photoBdd, PDO::PARAM_STR);
                 $modifAnnonce->execute();
 
-                $queryProduit = $pdo->query(" SELECT titre FROM produit WHERE id_produit = '$_GET[id_produit]' ");
-                $produit = $queryProduit->fetch(PDO::FETCH_ASSOC);
-
+                // MESSAGE DE VALIDATION A L'ENVOI
+                $queryProduit = $pdo->query("SELECT titre FROM annonce WHERE id_annonce = '$_GET[id_annonce]'");
+                $annonce = $queryAnnonce->fetch(PDO::FETCH_ASSOC);
                 $content .= '<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
-                        <strong>Félicitations !</strong> Modification du produit '. $produit['titre'] .' réussie !
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>';
-            } else {
-                $inscrireAnnonce = $pdo->prepare(" INSERT INTO annonce (titre, description_courte, description_longue, prix, pays, ville, adresse) VALUES (:titre, :description_courte, :description_longue, :prix, :pays, :ville, :adresse) ");
-                $inscrireAnnonce->bindValue(':titre', $_POST['titre'], PDO::PARAM_STR);
-                $inscrireAnnonce->bindValue(':description_courte', $_POST['description_courte'], PDO::PARAM_STR);
-                $inscrireAnnonce->bindValue(':description_longue', $_POST['description_longue'], PDO::PARAM_STR);
-                $inscrireAnnonce->bindValue(':prix', $_POST['prix'], PDO::PARAM_STR);
-                // if (isset($_POST['photo'])) {
-                    // $inscrireAnnonce->bindValue(':photo', $_POST['photo'], PDO::PARAM_STR);
-                // } else {
-                    // $inscrireAnnonce->bindValue(':photo', null, PDO::PARAM_NULL);
-                // }
-                $inscrireAnnonce->bindValue(':pays', $_POST['pays'], PDO::PARAM_STR);
-                $inscrireAnnonce->bindValue(':ville', $_POST['ville'], PDO::PARAM_STR);
-                // pour le bindValue de la photo, on ne peut utiliser $_POST['photo'] pour le pointeur nommé :photo. On doit donner une chaine de caractères (affectée à $photo_bdd, voir plus en haut)
-                // $inscrireProduit->bindValue(':photo', $photo_bdd, PDO::PARAM_STR);
-                $inscrireAnnonce->bindValue(':adresse', $_POST['adresse'], PDO::PARAM_INT);
-                // if (isset($_POST['cp'])) {
-                //     $inscrireAnnonce->bindValue(':cp', $_POST['cp'], PDO::PARAM_INT);
-                // } else {
-                //     $inscrireAnnonce->bindValue(':cp', null, PDO::PARAM_NULL);
-                // }
-                $inscrireAnnonce->execute();
+                                <strong>Félicitations !</strong> Modification de produit ' . $annonce['titre'] .  ' est réussie 😉!
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>';
+            }else{
+
+                $incluirePhoto = $pdo->prepare("INSERT INTO photo (photo1, photo2, photo3, photo4, photo5) VALUES (:photo1, :photo2, :photo3, :photo4, :photo5)");
+
+                $incluirePhoto->bindParam(':photo1', $photoBdd1);
+                $incluirePhoto->bindParam(':photo2', $photoBdd2);
+                $incluirePhoto->bindParam(':photo3', $photoBdd3);
+                $incluirePhoto->bindParam(':photo4', $photoBdd4);
+                $incluirePhoto->bindParam(':photo5', $photoBdd5);
+                $incluirePhoto->execute();
+
+                $photo_id = $pdo->lastInsertId();
+
+                // REQUETTE DE INSERTION A LA BDD
+                $incluireAnnonce = $pdo->prepare("INSERT INTO annonce (titre, description_courte, description_longue, prix, photo, pays, ville, adresse, cp, membre_id, categorie_id, date_enregistrement, photo_id) VALUES (:titre, :description_courte, :description_longue, :prix, :photo, :pays, :ville, :adresse, :cp, :membre_id, :categorie_id, NOW(), :photo_id)");
+
+                $incluireAnnonce->bindParam(':titre', $_POST['titre']);
+                $incluireAnnonce->bindParam(':description_courte', $_POST['description_courte']);
+                $incluireAnnonce->bindParam(':description_longue', $_POST['description_longue']);
+                $incluireAnnonce->bindParam(':prix', $_POST['prix']);
+                $incluireAnnonce->bindParam(':photo', $photoBdd);
+                $incluireAnnonce->bindParam(':pays', $_POST['pays']);
+                $incluireAnnonce->bindParam(':ville', $_POST['ville']);
+                $incluireAnnonce->bindParam(':adresse', $_POST['adresse']);
+                $incluireAnnonce->bindParam(':cp', $_POST['cp']);
+                $incluireAnnonce->bindParam(':membre_id', $id_membre);
+                $incluireAnnonce->bindParam(':photo_id', $photo_id);
+                $incluireAnnonce->bindValue(':categorie_id', $_POST['categorie'], PDO::PARAM_STR);
+                $incluireAnnonce->execute();
             }
         }
     }
-    // REQUETE - RECUPERATION EN BDD POUR UN UPDATE
-    if ($_GET['action'] == 'update') {
-        $queryAnnonce = $pdo->query("SELECT * FROM annonce WHERE id_annonce = '$_GET[id_annonce]' ");
-        $annonceActuel = $queryAnnonce->fetch(PDO::FETCH_ASSOC);
+
+    // REQUETTE DE UPDATE
+    if($_GET['action'] == 'update'){
+        $tousAnnonce = $pdo->query("SELECT * FROM annonce WHERE id_annonce = '$_GET[id_annonce]'");
+        $annonceActuel = $tousAnnonce->fetch(PDO::FETCH_ASSOC);
     }
 
-    $id_annonce  = (isset($annonceActuel['id_annonce'])) ? $annonceActuel['id_annonce'] : "";
+    // REQUETTE DE RECUPERATION DE BDD PAR APPORT A LES DONNES EN FORM
+    $id_annonce = "";
     $titre = (isset($annonceActuel['titre'])) ? $annonceActuel['titre'] : "";
     $description_courte = (isset($annonceActuel['description_courte'])) ? $annonceActuel['description_courte'] : "";
     $description_longue = (isset($annonceActuel['description_longue'])) ? $annonceActuel['description_longue'] : "";
     $prix = (isset($annonceActuel['prix'])) ? $annonceActuel['prix'] : "";
-    $photo = (isset($annonceActuel['photo'])) ? $annonceActuel['photo'] : "";
     $pays = (isset($annonceActuel['pays'])) ? $annonceActuel['pays'] : "";
     $ville = (isset($annonceActuel['ville'])) ? $annonceActuel['ville'] : "";
     $adresse = (isset($annonceActuel['adresse'])) ? $annonceActuel['adresse'] : "";
-    $codePostal = (isset($annonceActuel['cp'])) ? $annonceActuel['cp'] : "";
+    $cp = (isset($annonceActuel['cp'])) ? $annonceActuel['cp'] : "";
+    $id_membre = (isset($annonceActuel['membre_id'])) ? $annonceActuel['membre_id'] : "";
+    $photo_id = (isset($annonceActuel['photo_id'])) ? $annonceActuel['photo_id'] : "";
+    $photo_actuelle = (isset($annonceActuel['photo'])) ? $annonceActuel['photo'] : "";
+    $categorie_id = (isset($annonceActuel['categorie_id'])) ? $annonceActuel['categorie_id'] : "";
+    // A FAIRE -> PHOTO
 
+    // REQUETTE POUR DELETE
     if($_GET['action'] == 'delete'){
-        $pdo->query(" DELETE FROM annonce WHERE id_annonce = '$_GET[id_annonce]' ");
-    }
+        $pdo->query("DELETE FROM annonce WHERE id_annonce = '$_GET[id_annonce]'");
+    } 
 }
 
 require_once('includeAdmin/header.php');
+// require_once('../include/affichage.php');
 ?>
-
-<!-- $erreur .= '<div class="alert alert-danger" role="alert">Erreur format mot de passe !</div>'; -->
-
-<!-- $content .= '<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
-                        <strong>Félicitations !</strong> Insertion du produit réussie !
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>'; -->
-
-<h1 class="text-center my-5">
-    <div class="badge badge-warning text-wrap p-3">Gestion des produits</div>
-</h1>
 
 <?= $erreur ?>
 <?= $content ?>
-<!-- utilisation de la fonction personnalisée debug pour savoir ce qui a été récupéré avec $_POST, pour comprendre en cas de problème, ou se situe le problème -->
-<!-- <?= debug($_POST) ?> -->
 
+<?= 
+debug($id_annonce);
+debug($id_membre);
+?>
+<!-- TITLE GESTION -->
+<h1 class="text-center my-5">
+    <div class="badge badge-success text-wrap p-3">Gestion des annonces</div>
+</h1>
+
+<!-- MESSAGE D'INFORMATION -->
 <?php if (!isset($_GET['action']) && !isset($_GET['page'])) : ?>
-<div class="blockquote alert alert-dismissible fade show mt-5 shadow border border-warning rounded" role="alert">
-    <p>Gérez ici votre base de données des produits</p>
-    <p>Vous pouvez modifier leurs données, ajouter ou supprimer un produit</p>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
+    <div class="blockquote col-5 mx-auto alert alert-dismissible fade show mt-5 shadow border border-warning rounded" role="alert">
+        <p class="text-center">Gérez ici votre base de données des annonces</p>
+        <p class="text-center">Vous pouvez modifier leurs données ou supprimer les annonces</p>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 <?php endif; ?>
 
-<?php if(isset($_GET['action'])): ?>
-<h2 class="pt-5">Formulaire <?= ($_GET['action'] == 'add') ? "d'ajout" : "de modification" ?> des produits</h2>
+<!-- AFFICHAGE ANNONCE -->
+<?php if (isset($_GET['action']) && $_GET['action'] == 'see'): ?>
+    <div class="text-center py-5 col-10 mx-auto">
+        <div class="d-md-flex">
+            <div class="card shadow p-3 mb-5 bg-white rounded">
+                <img src="<?= URL . 'img/' . $detail['photo'] ?>" class="card-img-top maxImg" alt="image du produit">
+                <div>
+                    <img src="<?= URL . 'img/' . $test[''] ?>" alt="">
+                    <img src="" alt="">
+                    <img src="" alt="">
+                    <img src="" alt="">
+                    <img src="" alt="">
+                </div>
+            </div>
+            <div class="col-5 mx-auto text-center">
+                <h1 class=""><?= $detail['titre'] ?></h1>
+                <h2 class="mt-3"><?= $detail['description_courte']?></h2>
+                <p class=""><?= $detail['description_longue']?></p>
+                <h2 class="">Prix: <?= $detail['prix'] . " €" ?></h2>
+            </div>
+        </div>
+        <div class="d-flex mx-auto">
+            <h3>Adresse: <?= $detail['adresse'] . " |"?></h3>
+            <h3 class="ml-2">Ville: <?= $detail['ville'] . " |"?></h3>
+            <h3 class="ml-2">Code-Postal: <?= $detail['cp'] . " |"?></h3>
+            <h3 class="ml-2">Pays: <?= $detail['pays'] ?></h3>
+        </div>
+    </div>
+<?php endif; ?>
 
-<!-- l'attribut enctype de la balise form permet l'envoi d'un fichier en upload, il est obligatoire, sinon on ne pourra envoyer le fichier image correspondant au produit -->
-<form id="monForm" class="my-5" method="POST" action="" enctype="multipart/form-data">
+<!-- FORMULAIRE -->
+<?php if(isset($_GET['action']) && $_GET['action'] != 'see'): ?>
 
-    <input type="hidden" name="id_annonce " value="<?= $id_annonce  ?>">
+    <!-- TITLE FORMULAIRE -->
+    <h2 class="my-5 text-center"><u>Formulaire <?= ($_GET['action'] == 'add') ? "d'ajout" : "de modification" ?> des annonces</u></h2>
+
+
+    <form id="monForm" class="my-5 col-12 mx-auto" method="POST" action="" enctype="multipart/form-data">
+
+        <input type="" name="id_annonce" value="<?= $id_annonce  ?>">
+        <input type="" name="membre_id" value="<?= $id_membre?>">
+        <input type="" name="photo_id" value="<?= $photo_id?>">
+        <input type="" name="categorie_id" value="<?= $categorie_id  ?>">
     
-    <div class="row mt-5">
-        <!-- TITRE -->
-        <div class="col-md-3">
-            <label class="form-label" for="titre">
-                <div class="badge badge-dark text-wrap">Titre</div>
-            </label>
-            <input class="form-control" type="text" name="titre" id="titre" placeholder="titre" value="<?= $titre ?>">
+        <div class="d-flex mx-auto mt-5">
+            <!-- TITRE -->
+            <div class="col-md-4 mx-auto">
+                <label class="form-label" for="titre">
+                    <div class="badge badge-dark text-wrap">Titre</div>
+                </label>
+                <input class="form-control" type="text" name="titre" id="titre" placeholder="titre" value="<?= $titre ?>">
+            </div>
+            <!-- DESCRIPTION COURTE -->
+            <div class="col-md-4 mx-auto">
+                <label class="form-label" for="description_courte">
+                    <div class="badge badge-dark text-wrap">Description courte</div>
+                </label>
+                <input class="form-control" type="text" name="description_courte" id="description_courte" placeholder="Description courte"  value="<?= $description_courte ?>">
+            </div>
+            <!-- DESCRIPTION LONGUE -->
+            <div class="col-md-4 mx-auto">
+                <label class="form-label" for="description_longue">
+                    <div class="badge badge-dark text-wrap">Description longue</div>
+                </label>
+                <textarea class="form-control" name="description_longue" id="description_longue" placeholder="Description longue" rows="5"><?= $description_longue ?></textarea>
+            </div>
         </div>
-        <!-- DESCRIPTION COURTE -->
-        <div class="col-md-3">
-            <label class="form-label" for="description_courte">
-                <div class="badge badge-dark text-wrap">Description courte</div>
-            </label>
-            <input class="form-control" type="text" name="description_courte" id="description_courte" placeholder="Description courte"  value="<?= $description_courte ?>">
-        </div>
-        <!-- DESCRIPTION LONGUE -->
-        <div class="col-md-6">
-            <label class="form-label" for="description_longue">
-                <div class="badge badge-dark text-wrap">Description longue</div>
-            </label>
-            <textarea class="form-control" name="description_longue" id="description_longue" placeholder="Description longue" rows="5"><?= $description_longue ?></textarea>
-        </div>
-    </div>
 
-    <div class="row mt-5">
-        <!-- PRIX -->
-        <div class="col-md-4">
-            <label class="form-label" for="prix">
-                <div class="badge badge-dark text-wrap">Prix</div>
-            </label>
-            <input class="form-control" type="text" name="prix" id="prix" placeholder="Prix" value="<?= $prix ?>">
+        <div class="d-flex mx-auto mt-5">
+                <!-- PAYS -->
+                <div class="col-md-4 mx-auto mt-5">
+                    <label class="form-label" for="pays">
+                        <div class="badge badge-dark text-wrap">Pays</div>
+                    </label>
+                    <input class="form-control" type="text" name="pays" id="pays" placeholder="Pays" value="<?= $pays?>">
+                </div>
+                <!-- VILLE -->
+                <div class="col-md-4 mx-auto mt-5">
+                    <label class="form-label" for="ville">
+                        <div class="badge badge-dark text-wrap">Ville</div>
+                    </label>
+                    <input class="form-control" type="text" name="ville" id="ville"  placeholder="Ville" value="<?= $ville?>">
+                </div>
+                <!-- ADRESSE -->
+                <div class="col-md-4 mx-auto mt-5">
+                    <label class="form-label" for="adresse">
+                        <div class="badge badge-dark text-wrap">Adresse</div>
+                    </label>
+                    <input class="form-control" type="text" name="adresse" id="adresse"  placeholder="Adresse" value="<?= $adresse?>">
+                </div>
         </div>
-        <!-- PHOTO -->
-        <div class="col-md-4">
-            <label class="form-label" for="photo">
-                <div class="badge badge-dark text-wrap">Photo</div>
-            </label>
-            <input class="form-control" type="file" name="photo" id="photo" placeholder="Photo">
-        </div>
-    </div>
 
-    <div class="row mt-5">
-        <div class="row">
-            <!-- PAYS -->
-            <div class="col-md-4">
-                <label class="form-label" for="pays">
-                    <div class="badge badge-dark text-wrap">Pays</div>
-                </label>
-                <input class="form-control" type="text" name="pays" id="pays" placeholder="Photo">
-            </div>
-            <!-- VILLE -->
-            <div class="col-md-4 mt-5">
-                <label class="form-label" for="ville">
-                    <div class="badge badge-dark text-wrap">Ville</div>
-                </label>
-                <input class="form-control" type="text" name="ville" id="ville"  placeholder="Ville" value="<?= $ville?>">
-            </div>
-            <!-- ADRESSE -->
-            <div class="col-md-4 mt-5">
-                <label class="form-label" for="adresse">
-                    <div class="badge badge-dark text-wrap">Adresse</div>
-                </label>
-                <input class="form-control" type="text" name="adresse" id="adresse"  placeholder="Adresse" value="<?= $adresse?>">
-            </div>
+        <div class="d-flex mx-auto mt-5">
             <!-- CODE POSTAL -->
             <div class="col-md-4 mt-5">
-                <label class="form-label" for="cp">
-                    <div class="badge badge-dark text-wrap">Code Postal</div>
+                    <label class="form-label" for="cp">
+                        <div class="badge badge-dark text-wrap">Code Postal</div>
+                    </label>
+                    <input class="form-control" type="text" name="code_postal" id="cp"  placeholder="cp" value="<?= $cp?>">
+                </div>
+            <!-- PRIX -->
+            <div class="col-md-4 mt-5">
+                <label class="form-label" for="prix">
+                    <div class="badge badge-dark text-wrap">Prix</div>
                 </label>
-                <input class="form-control" type="text" name="code_postal" id="cp"  placeholder="cp" value="<?= $codePostal?>">
+                <input class="form-control" type="text" name="prix" id="prix" placeholder="Prix" value="<?= $prix ?>">
             </div>
+            <!-- PHOTO -->
+            <div class="col-md-4 mt-5">
+                <label class="form-label" for="photo">
+                    <div class="badge badge-dark text-wrap">Photo Affiche</div>
+                </label>
+                <input class="form-control" type="file" name="photo" id="photo" placeholder="Photo">
+            </div>
+            <?php if(!empty($photo)): ?>
+                <div class="mt-4">
+                    <p>Vous pouvez changer d'image
+                        <img src="<?= URL . 'img/' . $photo ?>" width="50px">
+                    </p>
+                </div>
+            <?php endif; ?>
         </div>
-    </div>
-    <div class="col-md-1 mt-5">
-        <button type="submit" class="btn btn-outline-dark btn-warning">Valider</button>
-    </div>
-</form>
+
+        <!-- VALIDATION -->
+        <div class="col-md-3 mt-5 mx-auto">
+            <button type="submit" class="btn btn-outline-dark btn-success w-100 text-white">Valider</button>
+        </div>
+
+    </form>
 <?php endif; ?>
 
-<?php $queryProduits = $pdo->query(" SELECT id_annonce FROM annonce "); ?>
-<h2 class="py-5 text-center">Nombre de produits en base de données: <?= $queryProduits->rowCount() ?></h2>
+<!-- NOMBRE DE ANNONCES EN BDD -->
+<?php $nbAnnonces = $pdo->query(" SELECT id_annonce FROM annonce "); ?>
+<h2 class="py-5 text-center">Nombre de annonces en base de données:</h2>
+<h3 class="text-center display-3 mb-5">
+    <div class="badge badge-success p-3"><?= $nbAnnonces->rowCount() ?> </div>
+</h3>
 
-<div class="row justify-content-center py-5">
-    <a href='?action=add'>
-        <button type="button" class="btn btn-sm btn-outline-dark shadow rounded">
-            <i class="bi bi-plus-circle-fill"></i> Ajouter un produit
-        </button>
-    </a>
+<!-- TABLEAU DE RESCUPERATION DONNES -->
+<div class="col-12">
+    <table class="table table-white text-center">
+        <?php $afficheAnnonces = $pdo->query("SELECT * FROM annonce ORDER BY date_enregistrement DESC LIMIT $parPage OFFSET $premierAnnonce") ?>
+        <thead>
+            <tr>
+                <?php for ($i = 0; $i < $afficheAnnonces->columnCount(); $i++) :
+                    $colonne = $afficheAnnonces->getColumnMeta($i) ?>
+                    <th><?= $colonne['name'] ?></th>
+                <?php endfor; ?>
+                <th colspan=2>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while ($annonce = $afficheAnnonces->fetch(PDO::FETCH_ASSOC)) : ?>
+                <tr>
+                    <?php foreach ($annonce as $key => $value) : ?>
+                        <?php if ($key == 'prix') : ?>
+                            <td><?= $value ?> €</td>
+                        <?php elseif ($key == 'photo') : ?>
+                            <td><img class="img-fluid" src="<?= URL . 'img/' . $value ?>" width="50" loading="lazy"></td>
+                        <?php else : ?>
+                            <td><?= $value ?></td>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    <td><a href='?action=update&id_annonce=<?= $annonce['id_annonce'] ?>'><i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i></a></td>
+                    <td><a href='../fiche_annonce.php?id_annonce=<?= $annonce['id_annonce'] ?>'><i class="bi bi-eye" style="font-size: 1.5rem;"></i></a></td>
+                    <!-- <td><a href='?action=see&id_annonce=<?= $annonce['id_annonce'] ?>'><i class="bi bi-eye" style="font-size: 1.5rem;"></i></a></td> -->
+                    <td><a data-href="?action=delete&id_annonce=<?= $annonce['id_annonce'] ?>" data-toggle="modal" data-target="#confirm-delete"><i class="bi bi-trash" style="font-size: 1.5rem;"></i></a></td>
+                </tr>
+            <?php endwhile; ?>
+        </tbody>
+    </table>
 </div>
 
-<table class="table table-dark text-center">
-    <!-- requete complétée pour n'afficher que 10 produits dans le tableau, le OFFSET détermine quel produit sera affiché en premier dans la nouvelle page -->
-
-    <!-- ASC LIMIT $parPage OFFSET $premierProduit -->
-    <?php $afficheProduits = $pdo->query("SELECT * FROM annonce ORDER BY date_enregistrement") ?>
-    <thead>
-        <tr>
-            <?php for ($i = 0; $i < $afficheProduits->columnCount(); $i++) :
-                $colonne = $afficheProduits->getColumnMeta($i) ?>
-                <th><?= $colonne['name'] ?></th>
-            <?php endfor; ?>
-            <th colspan=2>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php while ($produit = $afficheProduits->fetch(PDO::FETCH_ASSOC)) : ?>
-            <tr>
-                <?php foreach ($produit as $key => $value) : ?>
-                    <?php if ($key == 'prix') : ?>
-                        <td><?= $value ?> €</td>
-                    <?php elseif ($key == 'photo') : ?>
-                        <td><img class="img-fluid" src="<?= URL . 'img/' . $value ?>" width="50" loading="lazy"></td>
-                    <?php else : ?>
-                        <td><?= $value ?></td>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-                <td><a href='?action=update&id_produit=<?= $produit['id_produit'] ?>'><i class="bi bi-pen-fill text-warning"></i></a></td>
-                <td><a data-href="?action=delete&id_produit=<?= $produit['id_produit'] ?>" data-toggle="modal" data-target="#confirm-delete"><i class="bi bi-trash-fill text-danger" style="font-size: 1.5rem;"></i></a></td>
-            </tr>
-        <?php endwhile; ?>
-    </tbody>
-</table>
-
-<!-- Début de pagination -->
+<!-- PAGINATION -->
 <nav aria-label="">
     <ul class="pagination justify-content-end">
-        <!-- dans la cas ou nous sommes sur la page 1, il ne faudra pas pouvoir cliquer sur l'onglet précedent, sinon, on sera expédié à la page 0 ! Il faut donc dans ce cas (voir la ternaire) si on est sur la page 1, que l'onglet soit non-cliquable, grace à la classe Bootstrap 'disabled' -->
-        <li class="page-item">
-        <!-- si on clique la fleche précédente, c'est pour aller à la page précédent
-    dans ce cas, on soustrait à $pageCourante, la valeur de 1 (si pageCourante = 4, on retournera à la page 3) -->
-            <a class="page-link text-dark" href="" aria-label="Previous">
+        <li class="page-item <?= ($pageCourante == 1) ? 'disabled' : "" ?> ">
+            <a class="page-link text-dark" href="?page=<?= $pageCourante - 1 ?>" aria-label="Previous">
                 <span aria-hidden="true">précédente</span>
                 <span class="sr-only">Previous</span>
             </a>
         </li>
-
-        <!-- affiche le nb de pages pour cliquer sur celle que l'on veut -->
-        <?php //for($page = 1; $page <= $nombrePages; $page++): ?>
+        <?php for($page = 1; $page <= $nombrePages; $page++): ?>
         <li class="mx-1 page-item">
-            <a class="btn btn-outline-dark" href=""></a>
+            <a class="btn btn-outline-success <?= ($pageCourante == $page) ? 'active' : "" ?>" href="?page=<?= $page ?>"><?= $page ?> </a>
         </li>
-        <?php //endfor; ?>
-        <!-- fin affichage nb de pages -->
-
-        <li class="page-item">
-            <a class="page-link text-dark" href="" aria-label="Next">
+        <?php endfor; ?>
+        <li class="page-item <?= ($pageCourante == $nombrePages)? 'disabled' : '' ?>">
+            <a class="page-link text-dark" href="?page=<?= $pageCourante + 1 ?>" aria-label="Next">
                 <span aria-hidden="true">suivante</span>
                 <span class="sr-only">Next</span>
             </a>
         </li>
     </ul>
 </nav>
-<!-- fin de pagination -->
 
-<!-- <img class="img-fluid" src="" width="50"> -->
-
-<!-- <td><a href=''><i class="bi bi-pen-fill text-warning"></i></a></td>-->
-<!-- <td><a data-href="" data-toggle="modal" data-target="#confirm-delete"><i class="bi bi-trash-fill text-danger" style="font-size: 1.5rem;"></i></a></td> -->
-
-<!-- modal suppression codepen https://codepen.io/lowpez/pen/rvXbJq -->
-
+<!-- MODAL DE SUP/MDF-->
 <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -408,7 +492,5 @@ require_once('includeAdmin/header.php');
         </div>
     </div>
 </div>
-
-<!-- modal -->
 
 <?php require_once('includeAdmin/footer.php'); ?>

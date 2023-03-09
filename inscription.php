@@ -74,13 +74,15 @@ require_once('include/header.php');
 ?>
 
 
-<h2 class="text-center py-5"><div class="badge badge-dark text-wrap p-3">Inscription</div></h2>
+    <h2 class="text-center py-5 col-3 mx-auto">
+        <div class="badge badge-info text-wrap p-3 w-100">Inscription</div>
+    </h2>
 
 <?= $erreur ?>
 
 <!-- $erreur .= '<div class="alert alert-danger" role="alert">Erreur format pseudo !</div>'; -->
 
-<form class="my-5" method="POST" action="">
+<form class="my-5 col-10 mx-auto" method="POST" action="">
 
     <div class="row">
         <!-- PSEUDO -->

@@ -230,43 +230,46 @@ require_once('includeAdmin/header.php');
 </div>
 
 <!-- TABLEAU DE RESCUPERATION DONNES -->
-<table class="table table-white text-center rounded-1">
-    <?php $afficheUsers = $pdo->query("SELECT * FROM membre ORDER BY date_enregistrement DESC LIMIT $pagination OFFSET $premierMembre "); ?>
-    <thead>
-        <tr>
-            <?php for ($i = 0; $i < $afficheUsers->columnCount(); $i++) :
-                $colonne = $afficheUsers->getColumnMeta(($i)) ?>
-                <?php if ($colonne['name'] != 'mdp') : ?>
-                    <th class="p-3 text-uppercase"><?= $colonne['name'] ?></th>
-                <?php endif; ?>
-            <?php endfor; ?>
-            <th colspan=2 class="p-3 text-uppercase">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php while ($user = $afficheUsers->fetch(PDO::FETCH_ASSOC)) : ?>
+<div class="col-12">
+    <table class="table table-white text-center rounded-1">
+        <?php $afficheUsers = $pdo->query("SELECT * FROM membre ORDER BY date_enregistrement DESC LIMIT $pagination OFFSET $premierMembre "); ?>
+        <thead>
             <tr>
-                <?php foreach ($user as $key => $value) : ?>
-                    <?php if ($key == 'statut') : ?>
-                        <td>
-                            <?php if ($value == 1) : ?>
-                                Administrateur
-                            <?php else : ?>
-                                Membre
-                            <?php endif; ?>
-                        </td>
-                    <?php else : ?>
-                        <?php if ($key != 'mdp') : ?>
-                            <td><?= $value ?></td>
-                        <?php endif; ?>
+                <?php for ($i = 0; $i < $afficheUsers->columnCount(); $i++) :
+                    $colonne = $afficheUsers->getColumnMeta(($i)) ?>
+                    <?php if ($colonne['name'] != 'mdp') : ?>
+                        <th class="p-3 text-uppercase"><?= $colonne['name'] ?></th>
                     <?php endif; ?>
-                <?php endforeach; ?>
-                <td><a href='?action=update&id_membre=<?= $user['id_membre'] ?>'><i class="bi bi-pen-fill text-warning"></i></a></td>
-                <td><a data-href="?action=delete&id_membre=<?= $user['id_membre'] ?>" data-toggle="modal" data-target="#confirm-delete"><i class="bi bi-trash-fill text-danger" style="font-size: 1.5rem;"></i></a></td>
+                <?php endfor; ?>
+                <th colspan=2 class="p-3 text-uppercase">Actions</th>
             </tr>
-        <?php endwhile; ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php while ($user = $afficheUsers->fetch(PDO::FETCH_ASSOC)) : ?>
+                <tr>
+                    <?php foreach ($user as $key => $value) : ?>
+                        <?php if ($key == 'statut') : ?>
+                            <td>
+                                <?php if ($value == 1) : ?>
+                                    Administrateur
+                                <?php else : ?>
+                                    Membre
+                                <?php endif; ?>
+                            </td>
+                        <?php else : ?>
+                            <?php if ($key != 'mdp') : ?>
+                                <td><?= $value ?></td>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    <td><a href='?action=update&id_membre=<?= $user['id_membre'] ?>'><i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i></a></td>
+                    <td><a data-href="?action=delete&id_membre=<?= $user['id_membre'] ?>" data-toggle="modal" data-target="#confirm-delete"><i class="bi bi-trash" style="font-size: 1.5rem;"></i></a></td>
+                </tr>
+            <?php endwhile; ?>
+        </tbody>
+    </table>
+</div>
+
 
 <!-- PAGINATION -->
 <nav aria-label="">

@@ -1,6 +1,6 @@
 <?php
 // affichage des catégories dans la navigation latérale
-// $afficheMenuCategories = $pdo->query(" SELECT DISTINCT categorie FROM produit ORDER BY categorie ASC ");
+$afficheMenuCategories = $pdo->query(" SELECT DISTINCT titre FROM categorie ORDER BY titre ASC ");
 // fin de navigation laterale catégories
 
 // tout l'affichage par categorie
@@ -52,19 +52,43 @@
 // Tout ce qui concerne la fiche produit
 
 // affichage d'un produit
-// if(isset($_GET['id_produit'])){
-    // $detailProduit = $pdo->query(" SELECT * FROM produit WHERE id_produit = '$_GET[id_produit]' ");
-    // pour se protéger de qlq'un qui tenterait de modifier l'id-produit dans l'URL...si la valeur n'existe pas en BDD, on le redirige vers notre index (URL). Le <= 0 est fait dans le cas ou il injecte une valeur négative
-    // if($detailProduit->rowCount() <= 0){
-        // header('location:' . URL);
-        // exit;
-    // }
-    // si on n'est pas rentré dans la condition, si le produit existe, on fait le fetch, et le resultat de la requete sera affecté dans la variable/tableau $detail
-    // $detail = $detailProduit->fetch(PDO::FETCH_ASSOC);
+if(isset($_GET['id_annonce'])){
+    $detailAnnonce = $pdo->query(" SELECT * FROM annonce WHERE id_annonce = '$_GET[id_annonce]' ");
+        if($detailAnnonce->rowCount() <= 0){
+            header('location:' . URL);
+            exit;
+        }
+    $detail = $detailAnnonce->fetch(PDO::FETCH_ASSOC);
+}
+
+// if(isset($_GET['id_annonce'])){
+//     $detailAnnonce = $pdo->query(" SELECT * FROM annonce WHERE id_annonce = '$_GET[id_annonce]' ");
+//         if($detailAnnonce->rowCount() <= 0){
+//             header('location:' . URL);
+//             exit;
+//         }
+//     $photoid = $detailAnnonce->fetch(PDO::FETCH_ASSOC);
 // }
+
+// $photoid = $pdo->query("SELECT * FROM photo WHERE id_photo = '$_GET[$photoid]'");
+// $maListePhoto = $photoid->fetch(PDO::FETCH_ASSOC);
+
+// if(isset($_GET['id_annonce'])){
+//     $detailAnnonce = $pdo->query(" SELECT * FROM annonce WHERE id_annonce = '$_GET[id_annonce]' ");
+//     $detail = $detailAnnonce->fetch(PDO::FETCH_ASSOC);
+
+    
+// }
+
 // fin affichage d'un seul produit
 
-
+// foreach($photo AS $indice => $valeur) {
+//     if($indice != 'id_photo') {
+//         if(!empty($valeur)) {
+//             echo '<img src="' . $maListePhoto . $valeur . '">';
+//         }
+//     }
+// } 
 //  fin fiche produit
 
 // --------------------------------------------------------------------------------------------
