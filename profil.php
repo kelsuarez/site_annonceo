@@ -271,9 +271,9 @@ require_once('include/header.php');
     <?= $validate ?>
 
     <!-- INFORMATION PROFIL -->
-    <div class="row justify-content-around py-5">
-        <div class="col-md-3 text-center">
+        <div class="col-11 col-lg-4 text-center mx-auto">
             <ul class="list-group">
+                <div>
                 <!-- PRENOM -->
                 <div class="list-group">
                     <h3>Votre Prenom</h3>
@@ -295,14 +295,13 @@ require_once('include/header.php');
                 </div>
             </ul>
         </div>
-    </div>
 
     <!-- NOMBRE DE PRODUITS EN BDD -->
     <h2 class="text-center py-5">Mes annonces: <?= $nbAnnonces?></h2>
 
-    <div class="d-flex mx-auto col-6">
+    <div class="d-lg-flex mx-auto col-lg-6">
         <!-- BUTTON VOIR ANNONCE -->
-        <div class="col mx-auto justify-content-center">
+        <div class="col mx-auto py-2 justify-content-center">
             <a href='?action=see'>
                 <button type="button" class="w-100 py-3 btn btn-sm btn-outline-success shadow rounded">
                     <i class="bi bi-eye mr-1"></i>
@@ -312,7 +311,7 @@ require_once('include/header.php');
         </div>
 
         <!-- BUTTON AJOUT ANNONCE -->
-        <div class="col mx-auto justify-content-center">
+        <div class="col mx-auto py-2 justify-content-center">
             <a href='?action=add'>
                 <button type="button" class="w-100 py-3 btn btn-sm btn-outline-success shadow rounded">
                     <i class="bi bi-plus-circle-fill"></i> 
@@ -365,11 +364,11 @@ require_once('include/header.php');
         <form id="monForm" class="my-5 col-12 mx-auto" method="POST" action=""  enctype="multipart/form-data">
 
             <!-- INPUT HIDDEN -->
-            <input type="" name="id_annonce" value="<?= $id_annonce ?>">
-            <input type="" name="membre_id" value="<?= $id_membre ?>">
-            <input type="" name="photo_id" value="<?= $photo_id ?>">
-            <input type="" name="photo_actuelle" value="<?= $photo_actuelle ?>">
-            <input type="" name="categorie" value="<?= $categorie_id?>">
+            <input type="hidden" name="id_annonce" value="<?= $id_annonce ?>">
+            <input type="hidden" name="membre_id" value="<?= $id_membre ?>">
+            <input type="hidden" name="photo_id" value="<?= $photo_id ?>">
+            <input type="hidden" name="photo_actuelle" value="<?= $photo_actuelle ?>">
+            <input type="hidden" name="categorie" value="<?= $categorie_id?>">
 
             <div class="d-md-flex mx-auto justify-content-center">
                 <div class="col-md-6 mx-auto">
@@ -443,7 +442,7 @@ require_once('include/header.php');
                                 <option value="" selected hidden>Choisir une catégories</option>
                                 <?php while ($categorie = $mesCategories->fetch(PDO::FETCH_ASSOC)) : ?>
                                     
-                                    <option value="<?= $categorie['id_categorie']?>"><?= $categorie['titre'] ?></option>
+                                    <option value="<?= $categorie['id_categorie']?>"><?= $categorie['titre'] . " | ". $categorie['motscles'] ?></option>
 
                                     <?php //$categorie_id = $categorie['id_categorie'];?>
 
@@ -486,19 +485,27 @@ require_once('include/header.php');
             </div>
             <div>
                 <div class="col-md-12 mt-4 mx-auto">
-                    <div class="d-flex mx-auto">
+                    <div class="d-lg-flex mx-auto">
                         <div>
                             <label for="photo1">Photo 1:</label>
                             <input type="file" name="photo1" id="photo1"><br>
                         </div>
+                        <div>
                             <label for="photo2">Photo 2:</label>
                             <input type="file" name="photo2" id="photo2"><br>
+                        </div>
+                        <div>
                             <label for="photo3">Photo 3:</label>
                             <input type="file" name="photo3" id="photo3"><br>
+                        </div>
+                        <div>
                             <label for="photo4">Photo 4:</label>
                             <input type="file" name="photo4" id="photo4"><br>
+                        </div>
+                        <div>
                             <label for="photo5">Photo 5:</label>
                             <input type="file" name="photo5" id="photo5"><br>
+                        </div>
                     </div>
                 </div>
             </div>

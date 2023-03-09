@@ -69,16 +69,16 @@ require_once('include/header.php');
             </a>
         </div>
     </div>
-    <div>
-        <h4 class="col-12 mx-auto mt-5"><?= $infos_annonce['description_longue'] ?></h4>
+    <div class="mt-5 d-flex">
+        <h3 class="col-3 mx-auto">Adresse : <?= $infos_annonce['adresse'] . " "?></h3>
+        <h3 class="col-3 mx-auto">Ville : <?=$infos_annonce['ville']?></h3>
+        <h3 class="col-3 mx-auto">Code postal : <?= $infos_annonce['cp']?></h3>
+        <h3 class="col-3 mx-auto">Pays : <?= $infos_annonce['pays']?></h3>
     </div>
-    <div class="mt-2">
-            <h3>Adresse : <?= $infos_annonce['adresse'] . " "?></h3>
-            <h3>Ville : <?=$infos_annonce['ville']?></h3>
-            <h3>Code postal : <?= $infos_annonce['cp']?></h3>
-            <h3>Pays : <?= $infos_annonce['pays']?></h3>
-        </div>
-    
+    <div class="mx-auto">
+        <h3 class="display-4 col-10 text-center mx-auto mt-5 text-underline"><u>Description de l'article</u></h3>
+        <h4 class="col-11 mx-auto mt-5"><?= $infos_annonce['description_longue'] ?></h4>
+    </div>
 </div>
 
 
