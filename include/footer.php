@@ -30,6 +30,9 @@ $('#confirm-delete').on('show.bs.modal', function(e) {
     $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
 });
 
+function changerImagePrincipale(nouvelleSource) {
+			document.getElementById("image-principale").src = nouvelleSource;
+		}
 /*POST
 
 // Bind click to OK button within popup

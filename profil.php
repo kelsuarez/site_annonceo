@@ -75,7 +75,7 @@ if(isset($_GET['action']) && !empty($_POST)){
         $erreur .= '<div class="alert alert-danger" role="alert">Erreur format description courte !</div>';
     }
     // DESCRIPTION LONGUE
-    if(!isset($_POST['description_longue']) || iconv_strlen($_POST['description_longue']) <1 || iconv_strlen($_POST['pays']) > 200 ){
+    if(!isset($_POST['description_longue']) || iconv_strlen($_POST['description_longue']) <1 || iconv_strlen($_POST['pays']) > 500 ){
         $erreur .= '<div class="alert alert-danger" role="alert">Erreur format description longue !</div>';
     }
     // PRIX
@@ -273,6 +273,7 @@ if(isset($_GET['action']) && !empty($_POST)){
 
 require_once('include/header.php');
 ?>
+<?php echo $erreur ?>
     <!-- MESSAGE DE BIENVENUE  -->
     <h2 class="text-center my-5 display-5">
         <div class="p-3 text-underline">Bonjour, <?= (internauteConnecteAdmin()) ? $_SESSION['membre']['prenom'] . ", vous etes admin du site" : $_SESSION['membre']['prenom'] ?></div>
@@ -306,7 +307,7 @@ require_once('include/header.php');
                 </div>
             </ul>
         </div>
-
+        <?php echo $erreur ?>
     <!-- NOMBRE DE PRODUITS EN BDD -->
     <h2 class="text-center py-5">Mes annonces: <?= $nbAnnonces?></h2>
 
@@ -525,6 +526,7 @@ require_once('include/header.php');
                     <button type="submit" class="btn btn-outline-dark btn-success w-100">Valider</button>
                 </a>
             </div>
+            <?= debug($erreur) ?>
         </form>
     <?php endif; ?>
 

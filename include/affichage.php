@@ -4,24 +4,24 @@ $afficheMenuCategories = $pdo->query(" SELECT DISTINCT titre FROM categorie ORDE
 // fin de navigation laterale catégories
 
 // tout l'affichage par categorie
-// if(isset($_GET['categorie'])){
+if(isset($_GET['categorie'])){
     // pagination pour les categories
     
     // fin pagination pour les categories
 
     // affichage de tous les produits concernés par une categorie
-    // $afficheProduits = $pdo->query(" SELECT * FROM produit WHERE categorie = '$_GET[categorie]' ORDER BY prix ASC ");
+    $fiche_annonce = $pdo->query(" SELECT annonce.*, categorie.titre AS titre_categorie FROM annonce, categorie WHERE categorie.titre = '$_GET[categorie]'");
     // fin affichage des produits par categorie
 
     // affichage de la categorie dans le <h2>
-    // $afficheTitreCategorie = $pdo->query(" SELECT categorie FROM produit WHERE categorie = '$_GET[categorie]' ");
-    // $titreCategorie = $afficheTitreCategorie->fetch(PDO::FETCH_ASSOC);
+    $afficheTitreCategorie = $pdo->query(" SELECT titre FROM categorie WHERE titre = '$_GET[categorie]' ");
+    $titreCategorie = $afficheTitreCategorie->fetch(PDO::FETCH_ASSOC);
     // fin du h2 categorie
 
     // pour les onglets categories
-    // $pageTitle = "Nos modèles de " . $_GET['categorie'];
+    $pageTitle = "Nos modèles de " . $_GET['categorie'];
     // fin onglets categories
-// }
+}
 // fin affichage par categorie
 
 // -----------------------------------------------------------------------------------

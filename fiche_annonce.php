@@ -8,7 +8,7 @@ require_once('include/init.php');
 //REQUETE POUR RECUPERER TOUT 
 if(!empty($_GET['id_annonce'])) {
 
-    $recup_annonce = $pdo->prepare("SELECT annonce.*, pseudo, prenom, telephone, email, categorie.titre AS titre_categorie FROM annonce, categorie, membre WHERE id_membre = membre_id AND id_categorie = categorie_id AND id_annonce = :id_annonce");
+    $recup_annonce = $pdo->prepare("SELECT annonce.*, membre.*, categorie.titre AS titre_categorie FROM annonce, categorie, membre WHERE id_membre = membre_id AND id_categorie = categorie_id AND id_annonce = :id_annonce");
     $recup_annonce->bindParam(':id_annonce', $_GET['id_annonce']);
     $recup_annonce->execute();
 
@@ -29,6 +29,7 @@ if(!empty($_GET['id_annonce'])) {
     header('location:index.php');
 }
 
+$recup_commentaire = $pdo->query("SELECT * FROM commentaire");
 
 
 require_once('include/affichage.php');
@@ -40,7 +41,7 @@ require_once('include/header.php');
 <div class="col-11 mx-auto mt-5">
     <div class="d-flex">
         <div class="col-6">
-            <img class="img-fluid" src="<?= URL . 'img/' . $infos_annonce['photo'] ?>" max-width="800" loading="lazy">
+            <img class="img-fluid" id="image-principale" src="<?= URL . 'img/' . $infos_annonce['photo'] ?>" max-width="800" loading="lazy">
         </div>
         <div class="col-6 text-center mx-auto">
             <h1 class="display-2 text-uppercase"><?= $infos_annonce['titre'] ?></h1>
@@ -50,11 +51,11 @@ require_once('include/header.php');
     </div>
     <div class="d-flex mt-5">
         <div class="mx-auto">
-            <img class="img-fluid mr-5" src="<?= URL . 'img/' . $infos_photos_annexes['photo1'] ?>" width="250" loading="lazy">
-            <img class="img-fluid mr-5" src="<?= URL . 'img/' . $infos_photos_annexes['photo2'] ?>" width="250" loading="lazy">
-            <img class="img-fluid mr-5" src="<?= URL . 'img/' . $infos_photos_annexes['photo3'] ?>" width="250" loading="lazy">
-            <img class="img-fluid mr-5" src="<?= URL . 'img/' . $infos_photos_annexes['photo4'] ?>" width="250" loading="lazy">
-            <img class="img-fluid" src="<?= URL . 'img/' . $infos_photos_annexes['photo5'] ?>" width="250" loading="lazy">
+            <img class="img-fluid mr-5" src="<?= URL . 'img/' . $infos_photos_annexes['photo1'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo1'] ?>')">
+            <img class="img-fluid mr-5" src="<?= URL . 'img/' . $infos_photos_annexes['photo2'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo2'] ?>')">
+            <img class="img-fluid mr-5" src="<?= URL . 'img/' . $infos_photos_annexes['photo3'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo3'] ?>')">
+            <img class="img-fluid mr-5" src="<?= URL . 'img/' . $infos_photos_annexes['photo4'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo4'] ?>')">
+            <img class="img-fluid" src="<?= URL . 'img/' . $infos_photos_annexes['photo5'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo5'] ?>')">
         </div>
     </div>
     <div class="d-flex mt-5 mx-auto">
@@ -70,10 +71,10 @@ require_once('include/header.php');
         </div>
     </div>
     <div class="mt-5 d-flex">
-        <h3 class="col-3 mx-auto">Adresse : <?= $infos_annonce['adresse'] . " "?></h3>
-        <h3 class="col-3 mx-auto">Ville : <?=$infos_annonce['ville']?></h3>
-        <h3 class="col-3 mx-auto">Code postal : <?= $infos_annonce['cp']?></h3>
-        <h3 class="col-3 mx-auto">Pays : <?= $infos_annonce['pays']?></h3>
+        <h3 class="col-4 mx-auto">Adresse : <?= $infos_annonce['adresse'] . " "?></h3>
+        <h3 class="col-4 mx-auto">Ville : <?=$infos_annonce['ville']?></h3>
+        <h3 class="col-2 mx-auto">Code postal : <?= $infos_annonce['cp']?></h3>
+        <h3 class="col-2 mx-auto">Pays : <?= $infos_annonce['pays']?></h3>
     </div>
     <div class="mx-auto">
         <h3 class="display-4 col-10 text-center mx-auto mt-5 text-underline"><u>Description de l'article</u></h3>
