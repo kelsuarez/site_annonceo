@@ -9,6 +9,15 @@ if(internauteConnecte()){
     header('location:' . URL . 'profil.php');
 }
 
+if(isset($_GET['action']) && $_GET['action'] == 'validate' ){
+    $validate .= '<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
+                        <strong>Félicitations !</strong> Votre inscription est réussie 😉, vous pouvez vous connecter !
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>';
+}
+
 // CONDITION D'ENVOIE EN BDD
 if($_POST){
 
@@ -82,6 +91,7 @@ require_once('include/header.php');
 
 <!-- $erreur .= '<div class="alert alert-danger" role="alert">Erreur format pseudo !</div>'; -->
 
+
 <form class="my-5 col-10 mx-auto" method="POST" action="">
 
     <div class="row">
@@ -133,7 +143,9 @@ require_once('include/header.php');
     </div>
 
     <div class="col-md-1 mt-5">
-    <button type="submit" class="btn btn-lg btn-outline-success">Valider</button>
+        <a href="?action=validate">
+            <button type="submit" class="btn btn-lg btn-outline-success">Valider</button>
+        </a>
     </div>
     
 </form>

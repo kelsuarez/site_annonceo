@@ -29,25 +29,36 @@ if (isset($_GET['action']) && $_GET['action'] == 'validate') {
                 </div>';
 }
 
-    $id_annonce = "";
-    $titre = "";
-    $description_courte = "";
-    $description_longue = "";
-    $prix =  "";
-    $pays =  "";
-    $ville = "";
-    $adresse =  "";
-    $cp =  "";
-    $id_membre = $_SESSION['membre']['id_membre'];
-    $photo_id = "";
-    $categorie_id = "";
-    $photo_actuelle = "";
+// MESSAGE DE CREATION ANNONCE
+if (isset($_GET['action']) && $_GET['action'] == 'ajoutfait') {
+    $validate .= '<div class="alert alert-success alert-dismissible fade show mt-5 col-5 mx-auto" role="alert">
+                    Félicitations <strong>' . $_SESSION['membre']['pseudo'] . '</strong>, votre annonce est en ligne !
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>';
+}
 
-    $photoBdd1 = "";
-    $photoBdd2 = "";
-    $photoBdd3 = "";
-    $photoBdd4 = "";
-    $photoBdd5 = "";
+// DECLARATION DE VARIABLES VIDES 
+$id_annonce = "";
+$titre = "";
+$description_courte = "";
+$description_longue = "";
+$prix =  "";
+$pays =  "";
+$ville = "";
+$adresse =  "";
+$cp =  "";
+$id_membre = $_SESSION['membre']['id_membre'];
+$photo_id = "";
+$categorie_id = "";
+$photo_actuelle = "";
+
+$photoBdd1 = "";
+$photoBdd2 = "";
+$photoBdd3 = "";
+$photoBdd4 = "";
+$photoBdd5 = "";
 
 
 
@@ -450,7 +461,6 @@ require_once('include/header.php');
                                 <?php endwhile; ?>
                             </select>
                     </div>
-                    
                 </div>
 
                 <div class="col-md-6 mx-auto">
@@ -511,7 +521,9 @@ require_once('include/header.php');
             </div>
             <!-- BUTTON VALIDER -->
             <div class="col-md-6 mx-auto mt-5">
-                <button type="submit" class="btn btn-outline-dark btn-success w-100">Valider</button>
+                <a href="?action=ajoutfait">
+                    <button type="submit" class="btn btn-outline-dark btn-success w-100">Valider</button>
+                </a>
             </div>
         </form>
     <?php endif; ?>

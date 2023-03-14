@@ -19,14 +19,14 @@ if(internauteConnecte()){
     exit();
 }
 
-if(isset($_GET['action']) && $_GET['action'] == 'validate' ){
-$validate .= '<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
-                    <strong>Félicitations !</strong> Votre inscription est réussie 😉, vous pouvez vous connecter !
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>';
-}
+// if(isset($_GET['action']) && $_GET['action'] == 'validate' ){
+// $validate .= '<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
+//                     <strong>Félicitations !</strong> Votre inscription est réussie 😉, vous pouvez vous connecter !
+//                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+//                         <span aria-hidden="true">&times;</span>
+//                     </button>
+//                 </div>';
+// }
 
 if($_POST){
 
