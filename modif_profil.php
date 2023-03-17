@@ -1,0 +1,234 @@
+<?php
+require_once('include/init.php');
+
+// VERIF DE CONNEXION
+if (!internauteConnecte()) {
+    header('location:' . URL . 'connexion.php');
+    exit();
+}
+
+if (!isset($_SESSION['membre'])) {
+    // Rediriger l'utilisateur vers la page de connexion
+    header('Location: ' . URL . 'connexion.php');
+    exit();
+}
+
+if ($_SESSION['membre']['id_membre'] != $_GET['id_membre']) {
+// Rediriger l'utilisateur vers une page d'erreur ou la page d'accueil
+header('Location: ' . URL . 'erreur.php');
+exit();
+}
+
+$success = "";
+
+// MEMBRE
+if (isset($_GET['action'])) {
+
+    if ($_POST) {
+
+        // PSEUDO
+        // if (!isset($_POST['pseudo']) || !preg_match('#^[a-zA-Z0-9-_.]{3,20}$#', $_POST['pseudo'])) {
+        //     $erreur .= '<div class="alert alert-danger" role="alert">Erreur format pseudo !</div>';
+        // }
+
+        // if ($_GET['action'] == 'add') {
+        //     $verifPseudo = $pdo->prepare("SELECT pseudo FROM membre WHERE pseudo = :pseudo ");
+        //     $verifPseudo->bindValue(':pseudo', $_POST['pseudo'], PDO::PARAM_STR);
+        //     $verifPseudo->execute();
+        //     if ($verifPseudo->rowCount() == 1) {
+        //         $erreur .= '<div class="alert alert-danger" role="alert">Erreur, ce pseudo existe déjà, vous devez en choisir un autre !</div>';
+        //     }
+            // MOT DE PASSE
+        //     if (!isset($_POST['mdp']) || strlen($_POST['mdp']) < 3 || strlen($_POST['mdp']) > 20) {
+        //         $erreur .= '<div class="alert alert-danger" role="alert">Erreur format mdp !</div>';
+        //     }
+        //     $_POST['mdp'] = password_hash($_POST['mdp'], PASSWORD_DEFAULT);
+        // }
+        // NOM
+        if (!isset($_POST['nom']) || iconv_strlen($_POST['nom']) < 3 || iconv_strlen($_POST['nom']) > 20) {
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format nom !</div>';
+        }
+        // PRENOM
+        if (!isset($_POST['prenom']) || iconv_strlen($_POST['prenom']) < 3 || iconv_strlen($_POST['prenom']) > 20) {
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format prénom !</div>';
+        }
+        // TELEPHONE 
+        if(!isset($_POST['telephone']) || !preg_match('#^[0-9]{1,10}$#', $_POST['telephone'])){
+        $erreur .= '<div class="alert alert-danger" role="alert">Erreur format telephone !</div>';
+        }
+        // EMAIL
+        if (!isset($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format email !</div>';
+        }
+        // CIVILITE
+        if (!isset($_POST['civilite']) || $_POST['civilite'] != 'femme' && $_POST['civilite'] != 'homme') {
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format civilité !</div>';
+        }
+
+        if (empty($erreur)) {
+            // mdp = :mdp, pseudo = :pseudo,
+
+            // si dans l'URL action == update, on entame une procédure de modification
+            if ($_GET['action'] == 'profil') {
+                $modifUser = $pdo->prepare(" UPDATE membre SET id_membre = :id_membre, nom = :nom, prenom = :prenom, telephone = :telephone, email = :email, civilite = :civilite WHERE id_membre = :id_membre ");
+                $modifUser->bindValue(':id_membre', $_POST['id_membre'], PDO::PARAM_INT);
+                // $modifUser->bindValue(':pseudo', $_POST['pseudo'], PDO::PARAM_STR);
+                $modifUser->bindValue(':nom', $_POST['nom'], PDO::PARAM_STR);
+                $modifUser->bindValue(':prenom', $_POST['prenom'], PDO::PARAM_STR);
+                $modifUser->bindValue(':telephone', $_POST['telephone'], PDO::PARAM_STR);
+                $modifUser->bindValue(':email', $_POST['email'], PDO::PARAM_STR);
+                $modifUser->bindValue(':civilite', $_POST['civilite'], PDO::PARAM_STR);
+                // $modifUser->bindValue(':mdp', $_POST['mdp'], PDO::PARAM_STR);
+                $modifUser->execute();
+        
+                // pour personnaliser le message de réussite, je dois récupérer le pseudo de l'utilisateur modifié en BDD, pour personnaliser le message
+                $queryUser = $pdo->query(" SELECT pseudo FROM membre WHERE id_membre = '$_GET[id_membre]' ");
+                $user = $queryUser->fetch(PDO::FETCH_ASSOC);
+        
+                $success = '<div class="text-center alert alert-success alert-dismissible fade show mt-5" role="alert">
+                            <strong>Félicitations !</strong> Votre modification de profil '. $user['pseudo'] .' a bien été pris en compte!
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="col-md-2 mx-auto text-center">
+                            <a href="profil.php" class="btn btn-success">Retourner a mon profil</a>
+                        </div>';
+            }
+        }
+    }
+
+    // REQUETE - RECUPERATION EN BDD POUR UN UPDATE
+    if ($_GET['action'] == 'profil') {
+        $tousUsers = $pdo->query("SELECT * FROM membre WHERE id_membre = '$_GET[id_membre]' ");
+        $userActuel = $tousUsers->fetch(PDO::FETCH_ASSOC);
+    }
+
+    $id_membre = (isset($userActuel['id_membre'])) ? $userActuel['id_membre'] : "";
+    $pseudo = (isset($userActuel['pseudo'])) ? $userActuel['pseudo'] : "";
+    $email = (isset($userActuel['email'])) ? $userActuel['email'] : "";
+    $nom = (isset($userActuel['nom'])) ? $userActuel['nom'] : "";
+    $prenom = (isset($userActuel['prenom'])) ? $userActuel['prenom'] : "";
+    $telephone = (isset($userActuel['telephone'])) ? $userActuel['telephone'] : "";
+    $civilite = (isset($userActuel['civilite'])) ? $userActuel['civilite'] : "";
+    $mdp = (isset($userActuel['mdp'])) ? $userActuel['mdp'] : "";
+
+    // REQUETE - DELETE
+    if($_GET['action'] == 'delete'){
+        $pdo->query(" DELETE FROM membre WHERE id_membre = '$_GET[id_membre]' ");
+    }
+}
+
+require_once('include/header.php');
+?>
+
+<!-- MODIFICATION DE PROFIL -->
+<?php// if (isset($_GET['action']) && $_GET['action'] == 'profil') : ?>
+
+<?= $erreur ?>
+<?= $success ?>
+
+<?php if (isset($_GET['action']) && $_GET['action'] == 'profil') : ?>
+        <div class="col-md-8 mx-auto">
+
+            <form class="my-5" method="POST" action="">
+
+            <input type="hidden" name="id_membre" value="<?= $id_membre ?>">
+
+            <div class="row">
+
+                <!-- PSEUDO -->
+                <!-- <div class="col-md-3 mt-5 mx-auto">
+                    <label class="form-label" for="pseudo">
+                        <div class="badge badge-dark text-wrap">Pseudo</div>
+                    </label>
+                    <input class="form-control" type="text" name="pseudo" id="pseudo" placeholder="Pseudo" max-length="20" pattern="[a-zA-Z0-9-_.]{3,20}" title="caractères acceptés: majuscules et minuscules, chiffres, signes tels que: - _ . entre trois et vingt caractères." required value="<?php //echo $pseudo ?>">
+                </div> -->
+
+                <!-- MOT DE PASSE -->
+                <!-- <div class="col-md-3 mt-5">
+                    <label class="form-label" for="mdp">
+                        <div class="badge badge-dark text-wrap">Mot de passe</div>
+                    </label>
+                    <input class="form-control" type="password" name="mdp" id="mdp" placeholder="Mot de passe" max-length="20" required value="<?php //echo $mdp ?>">
+                </div> -->
+                
+                <!-- EMAIL -->
+                <div class="col-md-3 mt-5 mx-auto">
+                    <label class="form-label" for="email">
+                        <div class="badge badge-dark text-wrap">Email</div>
+                    </label>
+                    <input class="form-control" type="email" name="email" id="email" placeholder="Email" value="<?= $email ?>">
+                </div>
+            </div>
+
+            <div class="row">
+
+                <!-- NOM -->
+                <div class="col-md-4 mt-5 mx-auto">
+                    <label class="form-label" for="nom">
+                        <div class="badge badge-dark text-wrap">Nom</div>
+                    </label>
+                    <input class="form-control" type="text" name="nom" id="nom" placeholder="Nom" value="<?= $nom ?>">
+                </div>
+
+                <!-- PRENOM -->
+                <div class="col-md-4 mt-5 mx-auto">
+                    <label class="form-label" for="prenom">
+                        <div class="badge badge-dark text-wrap">Prénom</div>
+                    </label>
+                    <input class="form-control" type="text" name="prenom" id="prenom" placeholder="Prénom" value="<?= $prenom ?>">
+                </div>
+            </div>
+
+            <div class="row">
+
+                <!-- TELEPHONE -->
+                <div class="col-md-4 mt-5 mx-auto">
+                    <label class="form-label" for="telephone"><div class="badge badge-dark text-wrap">Telephone</div></label>
+                    <input class="form-control" type="text" name="telephone" id="telephone" placeholder="Votre numéro de teléphone" value="<?= $telephone ?>">
+                </div>
+
+                <!-- CIVILITE -->
+                <div class="col-md-4 mt-4 mx-auto">
+                    <p>
+                        <div class="badge badge-dark text-wrap">Civilité</div>
+                    </p>
+
+                    <input type="radio" name="civilite" id="civilite1" value="femme" <?= ($civilite == "femme") ? 'checked' : ""  ?>>
+                    <label class="mx-2" for="civilite1">Femme</label>
+
+                    <input type="radio" name="civilite" id="civilite2" value="homme" <?= ($civilite == "homme") ? 'checked' : ""  ?>>
+                    <label class="mx-2" for="civilite2">Homme</label>
+                </div>
+            </div>
+
+            <!-- VALIDATION -->
+            <div class="col-md-3 mt-5 mx-auto">
+                <button type="submit" class="btn btn-outline-dark btn-success w-100 text-white">Valider</button>
+            </div>
+
+            </form>
+        </div>
+<?php endif; ?>
+
+
+
+
+
+<!-- MODAL DE SUP/MDF-->
+<!-- <a href="?action=validationModif" data-toggle="modal" data-target="#validationModif"></a> -->
+<!-- <div class="modal fade" id="validationModif" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Félicitations <?= $prenom ?>! La modification de votre profil a bien été pris en compte!
+            </div>
+            <div class="modal-footer">
+                <a href="profil.php?action=validationModif" class="btn btn-success btn-ok">VALIDER</a>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<?php require_once('include/footer.php') ?>

@@ -42,6 +42,8 @@ $photoBdd5 = "";
 
 //&& !empty($_POST)
 
+$mesCategories = $pdo->query("SELECT * FROM categorie");
+
 // REQUETTE GET POUR TRAVAIILLER SUR L'URL
 if(isset($_GET['action'])){
 
@@ -78,6 +80,10 @@ if(isset($_GET['action'])){
                 echo "Le type de fichier n'est pas autorisé.";
             }
         }
+        // CODE POSTAL
+        if(!isset($_POST['cp']) || !preg_match('#^[0-9]{5}$#', $_POST['cp'])){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format code postal !</div>';
+        }
         // PAYS
         if(!isset($_POST['pays']) || iconv_strlen($_POST['pays']) < 3 || iconv_strlen($_POST['pays']) > 20 ){
             $erreur .= '<div class="alert alert-danger" role="alert">Erreur format pays !</div>';
@@ -90,15 +96,11 @@ if(isset($_GET['action'])){
         if(!isset($_POST['adresse']) || strlen($_POST['adresse']) < 5 || strlen($_POST['adresse']) > 50 ){
             $erreur .= '<div class="alert alert-danger" role="alert">Erreur format adresse !</div>';
         }
-        // CODE POSTAL
-        if(!isset($_POST['cp']) || !preg_match('#^[0-9]{5}$#', $_POST['cp'])){
-            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format code postal !</div>';
-        }
         // TRAITEMENT PHOTO
-        $photoBdd = (!empty($_POST['photo_actuelle'])) ? $_POST['photo_actuelle'] : "";
-        // if($_GET['action'] == 'update'){
-        //     $photoBdd = $_POST['photo_actuelle'];
-        // }
+        $photoBdd = (!empty($_POST['photo'])) ? $_POST['photo'] : "";
+        if($_GET['action'] == 'update'){
+            $photoBdd = $_POST['photo_actualle'];
+        }
 
         if(!empty($_FILES['photo']['name'])){
             $photo_nom = uniqid() . '_' . $_FILES['photo']['name'];
@@ -111,7 +113,6 @@ if(isset($_GET['action'])){
             }
         }
         // A VOIR POUR LES 5 AUTRES PHOTOS
-
         if(!empty($_FILES['photo1']['name'])){
             $photo_nom = uniqid() . '_' . $_FILES['photo1']['name'];
             $photoBdd1 = "$photo_nom";
@@ -168,7 +169,7 @@ if(isset($_GET['action'])){
             
             // REQUETTE DE UPDATE
             if($_GET['action'] == 'update'){
-                $modifAnnonce = $pdo->prepare("UPDATE annonce SET id_annonce = :id_annonce, titre = :titre, description_courte = :description_courte, description_longue = :description_longue, prix = :prix, pays = :pays, ville = :ville, adresse = :adresse, cp = :cp, prix = :prix, stock = :stock, categorie_id = :categorie_id, photo = :photo  WHERE id_annonce = :id_annonce");
+                $modifAnnonce = $pdo->prepare("UPDATE annonce SET id_annonce = :id_annonce, titre = :titre, description_courte = :description_courte, description_longue = :description_longue, prix = :prix, pays = :pays, ville = :ville, adresse = :adresse, cp = :cp, categorie_id = :categorie_id, photo = :photo  WHERE id_annonce = :id_annonce");
                 $modifAnnonce->bindValue(':id_annonce', $_POST['id_annonce'], PDO::PARAM_INT);
                 $modifAnnonce->bindValue(':titre', $_POST['titre'], PDO::PARAM_STR);
                 $modifAnnonce->bindValue(':description_courte', $_POST['description_courte'], PDO::PARAM_STR);
@@ -178,12 +179,12 @@ if(isset($_GET['action'])){
                 $modifAnnonce->bindValue(':ville', $_POST['ville'], PDO::PARAM_STR);
                 $modifAnnonce->bindValue(':adresse', $_POST['adresse'], PDO::PARAM_STR);
                 $modifAnnonce->bindValue(':cp', $_POST['cp'], PDO::PARAM_STR);
-                $modifAnnonce->bindValue(':categorie_id', $_POST['categorie'], PDO::PARAM_STR);
+                $modifAnnonce->bindValue(':categorie_id', $_POST['categorie_id'], PDO::PARAM_STR);
                 $modifAnnonce->bindValue(':photo', $photoBdd, PDO::PARAM_STR);
                 $modifAnnonce->execute();
 
                 // MESSAGE DE VALIDATION A L'ENVOI
-                $queryProduit = $pdo->query("SELECT titre FROM annonce WHERE id_annonce = '$_GET[id_annonce]'");
+                $queryAnnonce = $pdo->query("SELECT titre FROM annonce WHERE id_annonce = '$_GET[id_annonce]'");
                 $annonce = $queryAnnonce->fetch(PDO::FETCH_ASSOC);
                 $content .= '<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
                                 <strong>Félicitations !</strong> Modification de produit ' . $annonce['titre'] .  ' est réussie 😉!
@@ -231,7 +232,7 @@ if(isset($_GET['action'])){
     }
 
     // REQUETTE DE RECUPERATION DE BDD PAR APPORT A LES DONNES EN FORM
-    $id_annonce = "";
+    $id_annonce = (isset($annonceActuel['id_annonce'])) ? $annonceActuel['id_annonce'] : "";
     $titre = (isset($annonceActuel['titre'])) ? $annonceActuel['titre'] : "";
     $description_courte = (isset($annonceActuel['description_courte'])) ? $annonceActuel['description_courte'] : "";
     $description_longue = (isset($annonceActuel['description_longue'])) ? $annonceActuel['description_longue'] : "";
@@ -259,10 +260,6 @@ require_once('includeAdmin/header.php');
 <?= $erreur ?>
 <?= $content ?>
 
-<?= 
-debug($id_annonce);
-debug($id_membre);
-?>
 <!-- TITLE GESTION -->
 <h1 class="text-center my-5">
     <div class="badge badge-success text-wrap p-3">Gestion des annonces</div>
@@ -280,7 +277,7 @@ debug($id_membre);
 <?php endif; ?>
 
 <!-- AFFICHAGE ANNONCE -->
-<?php if (isset($_GET['action']) && $_GET['action'] == 'see'): ?>
+<!-- <?php if (isset($_GET['action']) && $_GET['action'] == 'see'): ?>
     <div class="text-center py-5 col-10 mx-auto">
         <div class="d-md-flex">
             <div class="card shadow p-3 mb-5 bg-white rounded">
@@ -307,7 +304,7 @@ debug($id_membre);
             <h3 class="ml-2">Pays: <?= $detail['pays'] ?></h3>
         </div>
     </div>
-<?php endif; ?>
+<?php endif; ?> -->
 
 <!-- FORMULAIRE -->
 <?php if(isset($_GET['action']) && $_GET['action'] != 'see'): ?>
@@ -377,7 +374,7 @@ debug($id_membre);
                     <label class="form-label" for="cp">
                         <div class="badge badge-dark text-wrap">Code Postal</div>
                     </label>
-                    <input class="form-control" type="text" name="code_postal" id="cp"  placeholder="cp" value="<?= $cp?>">
+                    <input class="form-control" type="text" name="cp" id="cp"  placeholder="cp" value="<?= $cp?>">
                 </div>
             <!-- PRIX -->
             <div class="col-md-4 mt-5">
@@ -386,6 +383,9 @@ debug($id_membre);
                 </label>
                 <input class="form-control" type="text" name="prix" id="prix" placeholder="Prix" value="<?= $prix ?>">
             </div>
+        </div>
+
+        <div class="d-flex mx-auto mt-5">
             <!-- PHOTO -->
             <div class="col-md-4 mt-5">
                 <label class="form-label" for="photo">
@@ -393,13 +393,25 @@ debug($id_membre);
                 </label>
                 <input class="form-control" type="file" name="photo" id="photo" placeholder="Photo">
             </div>
-            <?php if(!empty($photo)): ?>
+            <?php if(!empty($photo_actuelle)): ?>
                 <div class="mt-4">
                     <p>Vous pouvez changer d'image
-                        <img src="<?= URL . 'img/' . $photo ?>" width="50px">
+                        <img src="<?= URL . 'img/' . $photo_actuelle ?>" width="50px">
                     </p>
                 </div>
             <?php endif; ?>
+            <input type="hidden" name="photo_actualle" value="<?php $photo ?>">
+            <!-- CATEGORIE -->
+            <div class="col-md-4 mt-5">
+                <label class="badge badge-dark text-wrap" for="categorie">Categorie</label>
+                <select class="form-control" name="categorie" id="categorie">
+                    <option value="" selected hidden>Choisir une catégories</option>
+                    <?php while ($categorie = $mesCategories->fetch(PDO::FETCH_ASSOC)) : ?>
+                        <option value="<?= $categorie['id_categorie']?>"><?= $categorie['titre'] . " | ". $categorie['motscles'] ?></option>
+                        <?php //$categorie_id = $categorie['id_categorie'];?>
+                    <?php endwhile; ?>
+                </select>
+            </div>
         </div>
 
         <!-- VALIDATION -->

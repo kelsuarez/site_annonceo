@@ -60,10 +60,6 @@ $photoBdd3 = "";
 $photoBdd4 = "";
 $photoBdd5 = "";
 
-
-
-
-// REQUETTE GET POUR TRAVAIILLER SUR L'URL
 if(isset($_GET['action']) && !empty($_POST)){
 
     // TITRE
@@ -250,14 +246,14 @@ if(isset($_GET['action']) && !empty($_POST)){
     }
 
     // REQUETTE DE RECUPERATION DE BDD PAR APPORT A LES DONNES EN FORM
-    $id_annonce = "";
-    $titre = (isset($annonceActuel['reference'])) ? $annonceActuel['reference'] : "";
-    $description_courte = (isset($annonceActuel['categorie'])) ? $annonceActuel['categorie'] : "";
-    $description_longue = (isset($annonceActuel['titre'])) ? $annonceActuel['titre'] : "";
-    $prix = (isset($annonceActuel['description'])) ? $annonceActuel['description'] : "";
-    $pays = (isset($annonceActuel['couleur'])) ? $annonceActuel['couleur'] : "";
-    $ville = (isset($annonceActuel['taille'])) ? $annonceActuel['taille'] : "";
-    $adresse	 = (isset($annonceActuel['public'])) ? $annonceActuel['public'] : "";
+    $id_annonce = (isset($annonceActuel['id_annonce'])) ? $annonceActuel['id_annonce'] : "";
+    $titre = (isset($annonceActuel['titre'])) ? $annonceActuel['titre'] : "";
+    $description_courte = (isset($annonceActuel['description_courte'])) ? $annonceActuel['description_courte'] : "";
+    $description_longue = (isset($annonceActuel['description_longue'])) ? $annonceActuel['description_longue'] : "";
+    $prix = (isset($annonceActuel['prix'])) ? $annonceActuel['prix'] : "";
+    $pays = (isset($annonceActuel['pays'])) ? $annonceActuel['pays'] : "";
+    $ville = (isset($annonceActuel['ville'])) ? $annonceActuel['ville'] : "";
+    $adresse = (isset($annonceActuel['adresse'])) ? $annonceActuel['adresse'] : "";
     $cp = (isset($annonceActuel['cp'])) ? $annonceActuel['cp'] : "";
     $id_membre = (isset($annonceActuel['membre_id'])) ? $annonceActuel['membre_id'] : "";
     $photo_id = (isset($annonceActuel['photo_id'])) ? $annonceActuel['photo_id'] : "";
@@ -273,44 +269,68 @@ if(isset($_GET['action']) && !empty($_POST)){
 
 require_once('include/header.php');
 ?>
-<?php echo $erreur ?>
+
+<?= $erreur ?>
+<?= debug($id_annonce); ?>
+
+<div class="col-md-12">
+            <?php echo '<pre>'; print_r($infos_annonce); echo '</pre>'; ?>
+            <?php echo '<pre>'; var_dump($infos_photos_annexes); echo '</pre>'; ?>
+        </div>
+
     <!-- MESSAGE DE BIENVENUE  -->
     <h2 class="text-center my-5 display-5">
-        <div class="p-3 text-underline">Bonjour, <?= (internauteConnecteAdmin()) ? $_SESSION['membre']['prenom'] . ", vous etes admin du site" : $_SESSION['membre']['prenom'] ?></div>
+        <div class="p-3 text-underline">Bonjour <?= (internauteConnecteAdmin()) ? $_SESSION['membre']['prenom'] . ", vous etes admin du site" : $_SESSION['membre']['prenom'] ?></div>
     </h2>
 
     <!-- MESSAGE DE VALIDATION -->
     <?= $validate ?>
 
     <!-- INFORMATION PROFIL -->
-        <div class="col-11 col-lg-4 text-center mx-auto">
-            <ul class="list-group">
-                <div>
-                <!-- PRENOM -->
+    <div class="col-11 col-lg-4 text-center mx-auto">
+        <ul class="list-group">
+            <!-- PRENOM -->
                 <div class="list-group">
                     <h3>Votre Prenom</h3>
                     <li class="btn btn-outline-success text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['prenom'] ?></li>
                 </div>
-                <!-- NOM -->
+            <!-- NOM -->
                 <div class="list-group">
                     <h3>Votre Nom</h3>
                     <li class="btn btn-outline-success text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['nom'] ?></li>
                 </div>
-                <!--  -->
+            <!-- PESUDO -->
+                <div class="list-group">
+                    <h3>Votre Pseudo</h3>
+                    <li class="btn btn-outline-success text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['pseudo'] ?></li>
+                </div>
+            <!-- MAIL -->
                 <div class="list-group">
                     <h3>Votre Email</h3>
                     <li class="btn btn-outline-success text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['email'] ?></li>
                 </div>
+            <!-- TELEPHONE -->
                 <div class="list-group">
                     <h3>Votre Téléphone</h3>
                     <li class="btn btn-outline-success text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['telephone'] ?></li>
                 </div>
-            </ul>
-        </div>
-        <?php echo $erreur ?>
+        </ul>
+    </div>
+
+    <!-- BUTTON VOIR PROFIL -->
+    <div class="col-3 mx-auto py-2 justify-content-center mb-5">
+        <a href='modif_profil.php?action=profil&id_membre=<?= $id_membre = $_SESSION['membre']['id_membre']?>'>
+            <button type="button" class="w-100 py-3 btn btn-sm btn-outline-success shadow rounded">
+                <i class="bi bi-eye mr-1"></i>
+                    Modifier mes informations
+            </button>
+        </a>
+    </div>
+
     <!-- NOMBRE DE PRODUITS EN BDD -->
     <h2 class="text-center py-5">Mes annonces: <?= $nbAnnonces?></h2>
 
+    <!-- BUTTONS AJO/VOIR ANNONCES -->
     <div class="d-lg-flex mx-auto col-lg-6">
         <!-- BUTTON VOIR ANNONCE -->
         <div class="col mx-auto py-2 justify-content-center">
@@ -370,7 +390,7 @@ require_once('include/header.php');
     <?php endif; ?>
 
     <!-- FORMULAIRE ANNONCE -->
-    <?php if (isset($_GET['action']) && $_GET['action'] == 'add'): ?>
+    <?php if (isset($_GET['action']) && $_GET['action'] == 'add') : ?>
         <h2 class="pt-5 text-center">Formulaire d'une annonce</h2>
 
         <form id="monForm" class="my-5 col-12 mx-auto" method="POST" action=""  enctype="multipart/form-data">
@@ -379,44 +399,23 @@ require_once('include/header.php');
             <input type="hidden" name="id_annonce" value="<?= $id_annonce ?>">
             <input type="hidden" name="membre_id" value="<?= $id_membre ?>">
             <input type="hidden" name="photo_id" value="<?= $photo_id ?>">
-            <input type="hidden" name="photo_actuelle" value="<?= $photo_actuelle ?>">
+            <!-- <input type="hidden" name="photo_actuelle" value="<?php //echo $photo_actuelle ?>"> -->
             <input type="hidden" name="categorie" value="<?= $categorie_id?>">
 
             <div class="d-md-flex mx-auto justify-content-center">
+
                 <div class="col-md-6 mx-auto">
 
                     <!-- MODULE TITRE -->
                     <div class="col-md-10 mx-auto">
                         <label class="form-label" for="reference"><div class="badge badge-dark text-wrap">Titre</div></label>
-                        <input 
-                            class="form-control" 
-                            type="text" 
-                            name="titre" 
-                            id="titre"  
-                            placeholder="Titre" 
-                            max-length="50" 
-                            pattern="[a-zA-Z0-9 -_.éà\'è]{2,50}" 
-                            title="caractères acceptés: majuscules et minuscules, chiffres, signes tels que: - _ . entre cinq et cinquante  caractères." 
-                            value="<?= $titre?>"
-                            required
-                        >
+                        <input class="form-control" type="text" name="titre" id="titre" placeholder="Titre" max-length="50" pattern="[a-zA-Z0-9 -_.éà\'è]{2,50}" title="caractères acceptés: majuscules et minuscules, chiffres, signes tels que: - _ . entre cinq et cinquante  caractères." value="<?= $titre?>" required>
                     </div>
 
                     <!-- MODULE DESCRIPTION COURTE -->
                     <div class="col-md-10 mt-4 mx-auto">
                         <label class="form-label" for="categorie"><div class="badge badge-dark text-wrap">Description courte</div></label>
-                        <input 
-                            class="form-control" 
-                            type="text" 
-                            name="description_courte" 
-                            id="description_courte"  
-                            placeholder="Description courte"
-                            max-length="100" 
-                            pattern="[a-zA-Z0-9-_.éà\'è]{5,100}" 
-                            title="caractères acceptés: majuscules et minuscules, chiffres, signes tels que: - _ . entre cinq et cent caractères." 
-                            value="<?= $description_courte?>"
-                            required
-                        >
+                        <input class="form-control" type="text" name="description_courte" id="description_courte" placeholder="Description courte" max-length="100" pattern="[a-zA-Z0-9-_.éà\'è]{5,100}" title="caractères acceptés: majuscules et minuscules, chiffres, signes tels que: - _ . entre cinq et cent caractères." value="<?= $description_courte?>" required>
                     </div>
 
                     <!-- MODULE DESCRIPTION LONGUE -->
@@ -433,34 +432,19 @@ require_once('include/header.php');
                     <!-- MODULE PRIX -->
                     <div class="col-md-10 mt-4 mx-auto">
                         <label class="form-label" for="prix"><div class="badge badge-dark text-wrap">Prix</div></label>
-                        <input 
-                            class="form-control" 
-                            type="text" 
-                            name="prix" 
-                            id="prix"  
-                            placeholder="Prix"
-                            max-length="5" 
-                            pattern="[0-9]{1,10}" 
-                            title="caractères acceptés: chiffres entre un et cinq caractères." 
-                            value="<?= $prix?>"
-                            required
-                            >
+                        <input class="form-control" type="text" name="prix" id="prix" placeholder="Prix" max-length="5" pattern="[0-9]{1,10}" title="caractères acceptés: chiffres entre un et cinq caractères." value="<?= $prix?>" required>
                     </div>
 
                     <!-- MODULE CATEGORIE -->
                     <div class="col-md-10 mt-4 mx-auto">
                         <label class="badge badge-dark text-wrap" for="categorie">Categorie</label>
-                            <select class="form-control" name="categorie" id="categorie">
-                                <option value="" selected hidden>Choisir une catégories</option>
-                                <?php while ($categorie = $mesCategories->fetch(PDO::FETCH_ASSOC)) : ?>
-                                    
-                                    <option value="<?= $categorie['id_categorie']?>"><?= $categorie['titre'] . " | ". $categorie['motscles'] ?></option>
-
-                                    <?php //$categorie_id = $categorie['id_categorie'];?>
-
-                                    
-                                <?php endwhile; ?>
-                            </select>
+                        <select class="form-control" name="categorie" id="categorie">
+                            <option value="" selected hidden>Choisir une catégories</option>
+                            <?php while ($categorie = $mesCategories->fetch(PDO::FETCH_ASSOC)) : ?>
+                                <option value="<?= $categorie['id_categorie']?>"><?= $categorie['titre'] . " | ". $categorie['motscles'] ?></option>
+                                <?php //$categorie_id = $categorie['id_categorie'];?>
+                            <?php endwhile; ?>
+                        </select>
                     </div>
                 </div>
 
@@ -528,6 +512,126 @@ require_once('include/header.php');
             </div>
             <?= debug($erreur) ?>
         </form>
+    <?php endif; ?>
+
+
+    <!-- && $_GET['action'] == 'add' -->
+    <!-- $_GET['action'] == 'update' -->
+    
+    <!-- FORMULAIRE -->
+    <?php if(isset($_GET['action']) && $_GET['action'] == 'update'): ?>
+
+    <!-- TITLE FORMULAIRE -->
+    <h2 class="my-5 text-center"><u>Formulaire <?= ($_GET['action'] == 'add') ? "d'ajout" : "de modification" ?> des annonces</u></h2>
+
+
+    <form id="monForm" class="my-5 col-12 mx-auto" method="POST" action="" enctype="multipart/form-data">
+
+        <input type="" name="id_annonce" value="<?= $id_annonce  ?>">
+        <input type="" name="membre_id" value="<?= $id_membre?>">
+        <input type="" name="photo_id" value="<?= $photo_id?>">
+        <input type="" name="categorie_id" value="<?= $categorie_id  ?>">
+
+        <div class="d-flex mx-auto mt-5">
+            <!-- TITRE -->
+            <div class="col-md-4 mx-auto">
+                <label class="form-label" for="titre">
+                    <div class="badge badge-dark text-wrap">Titre</div>
+                </label>
+                <input class="form-control" type="text" name="titre" id="titre" placeholder="titre" value="<?= $titre ?>">
+            </div>
+            <!-- DESCRIPTION COURTE -->
+            <div class="col-md-4 mx-auto">
+                <label class="form-label" for="description_courte">
+                    <div class="badge badge-dark text-wrap">Description courte</div>
+                </label>
+                <input class="form-control" type="text" name="description_courte" id="description_courte" placeholder="Description courte"  value="<?= $description_courte ?>">
+            </div>
+            <!-- DESCRIPTION LONGUE -->
+            <div class="col-md-4 mx-auto">
+                <label class="form-label" for="description_longue">
+                    <div class="badge badge-dark text-wrap">Description longue</div>
+                </label>
+                <textarea class="form-control" name="description_longue" id="description_longue" placeholder="Description longue" rows="5"><?= $description_longue ?></textarea>
+            </div>
+        </div>
+
+        <div class="d-flex mx-auto mt-5">
+                <!-- PAYS -->
+                <div class="col-md-4 mx-auto mt-5">
+                    <label class="form-label" for="pays">
+                        <div class="badge badge-dark text-wrap">Pays</div>
+                    </label>
+                    <input class="form-control" type="text" name="pays" id="pays" placeholder="Pays" value="<?= $pays?>">
+                </div>
+                <!-- VILLE -->
+                <div class="col-md-4 mx-auto mt-5">
+                    <label class="form-label" for="ville">
+                        <div class="badge badge-dark text-wrap">Ville</div>
+                    </label>
+                    <input class="form-control" type="text" name="ville" id="ville"  placeholder="Ville" value="<?= $ville?>">
+                </div>
+                <!-- ADRESSE -->
+                <div class="col-md-4 mx-auto mt-5">
+                    <label class="form-label" for="adresse">
+                        <div class="badge badge-dark text-wrap">Adresse</div>
+                    </label>
+                    <input class="form-control" type="text" name="adresse" id="adresse"  placeholder="Adresse" value="<?= $adresse?>">
+                </div>
+        </div>
+
+        <div class="d-flex mx-auto mt-5">
+            <!-- CODE POSTAL -->
+            <div class="col-md-4 mt-5">
+                    <label class="form-label" for="cp">
+                        <div class="badge badge-dark text-wrap">Code Postal</div>
+                    </label>
+                    <input class="form-control" type="text" name="cp" id="cp"  placeholder="cp" value="<?= $cp?>">
+                </div>
+            <!-- PRIX -->
+            <div class="col-md-4 mt-5">
+                <label class="form-label" for="prix">
+                    <div class="badge badge-dark text-wrap">Prix</div>
+                </label>
+                <input class="form-control" type="text" name="prix" id="prix" placeholder="Prix" value="<?= $prix ?>">
+            </div>
+        </div>
+
+        <div class="d-flex mx-auto mt-5">
+            <!-- PHOTO -->
+            <div class="col-md-4 mt-5">
+                <label class="form-label" for="photo">
+                    <div class="badge badge-dark text-wrap">Photo Affiche</div>
+                </label>
+                <input class="form-control" type="file" name="photo" id="photo" placeholder="Photo">
+            </div>
+            <?php if(!empty($photo_actuelle)): ?>
+                <div class="mt-4">
+                    <p>Vous pouvez changer d'image
+                        <img src="<?= URL . 'img/' . $photo_actuelle ?>" width="50px">
+                    </p>
+                </div>
+            <?php endif; ?>
+            <input type="hidden" name="photo_actualle" value="<?php $photo ?>">
+            <!-- CATEGORIE -->
+            <div class="col-md-4 mt-5">
+                <label class="badge badge-dark text-wrap" for="categorie">Categorie</label>
+                <select class="form-control" name="categorie" id="categorie">
+                    <option value="" selected hidden>Choisir une catégories</option>
+                    <?php while ($categorie = $mesCategories->fetch(PDO::FETCH_ASSOC)) : ?>
+                        <option value="<?= $categorie['id_categorie']?>"><?= $categorie['titre'] . " | ". $categorie['motscles'] ?></option>
+                        <?php //$categorie_id = $categorie['id_categorie'];?>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+        </div>
+
+        <!-- VALIDATION -->
+        <div class="col-md-3 mt-5 mx-auto">
+            <button type="submit" class="btn btn-outline-dark btn-success w-100 text-white">Valider</button>
+        </div>
+
+    </form>
     <?php endif; ?>
 
 <?php require_once('include/footer.php') ?>
