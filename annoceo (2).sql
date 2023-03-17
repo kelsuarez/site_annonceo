@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mar. 14 mars 2023 à 13:51
+-- Généré le : ven. 17 mars 2023 à 20:20
 -- Version du serveur : 8.0.31
 -- Version de PHP : 8.0.26
 
@@ -47,22 +47,21 @@ CREATE TABLE IF NOT EXISTS `annonce` (
   UNIQUE KEY `photo_id` (`photo_id`),
   KEY `membre_id` (`membre_id`) USING BTREE,
   KEY `categorie_id` (`categorie_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `annonce`
 --
 
 INSERT INTO `annonce` (`id_annonce`, `titre`, `description_courte`, `description_longue`, `prix`, `photo`, `pays`, `ville`, `adresse`, `cp`, `membre_id`, `photo_id`, `categorie_id`, `date_enregistrement`) VALUES
-(28, 'Annnonce 555', 'Annnonce 555', 'Annnonce 555', 1240, '640852c9bcfa1_boutique.jpg', 'France', 'Paris', '25 rue de', 20201, 1, 2, 3, '2023-03-08 10:18:01'),
-(50, 'Description longue', 'Description longue', 'Description longue', 12500, '6408b35e5b775_html.png', 'Description longue', 'Description longue', 'Description longue', 92500, 1, 24, 2, '2023-03-08 17:10:06'),
 (78, 'Mustang', 'Ford Mustang blanc', 'Capable d’atteindre 100 km/h en seulement 4,4 secondes, la Nouvelle Ford Mustang Mach 1 offre des performances à couper le souffle. Son nouveau système de refroidissement, sa direction précise et son châssis dernière génération vous garantissent une expérience de conduite incomparable.', 58500, '64090603152e0_voiture_blanc_princ.jpg', 'France', 'Paris', '50 rue de la liberté', 75005, 3, 58, 2, '2023-03-08 23:02:43'),
 (79, 'Tulipe', 'Bouquet de tulipes', 'bouquet de tulipes contenant 10 pièces, mélange des couleurs possible.', 25, '640ede6a339eb_pexels-lil-artsy-1917356.jpg', 'France', 'Grenoble', '73, avenue Ferdinand de Lesseps', 38000, 4, 59, 8, '2023-03-13 09:27:22'),
 (80, 'Photographe de mariage', 'Photographe spécialisé dans les mariages', 'Session de photographie pour votre mariage, prix inclus 25 photos retouchés. \r\n\r\nPour plus d\'information n\'hésites pas a me contacter.', 350, '640ee0204cc34_pexels-danik-prihodko-15878603.jpg', 'France', 'Strasbourg', '94, rue Descartes', 67100, 5, 60, 8, '2023-03-13 09:34:40'),
 (81, 'Maison bois', 'Montage des maison en bois', 'Montage des maison en bois solides en nature.\r\nContacte moi pour plus d\'information.', 20000, '640ee98e0a7d0_pexels-simon-berger-751546.jpg', 'France', 'Marseille', '22, cours Franklin Roosevelt', 13009, 6, 61, 7, '2023-03-13 10:14:54'),
 (82, 'Iphone 6', 'Vend iphone 6', 'Je vend mon iPhone 6 comme neuf', 550, '640ef3660ab84_pexels-torsten-dettlaff-56904.jpg', 'France', 'Dijon', '5, rue des lieutemants Thomazo', 21000, 7, 62, 5, '2023-03-13 10:56:54'),
-(83, 'TV vintage', 'Vente de téléviseurs vintages', 'Vente de téléviseurs vintages, différents couleurs, modelés et styles. Il sont personnalisables, idéaux pour votre des campagnes de visualisation, posters, évènements', 280, '640efd8f1e448_pexels-koolshooters-6976094.jpg', 'France', 'Vienne', '48, Place du Jeu de Paume', 38200, 8, 63, 5, '2023-03-13 11:40:15'),
-(84, 'Cadres photos', 'Cadres photo vintages', 'Vente de cadres photos vintages, personnalisables avec la taille, couleur et format de vous besoin.', 55, '640efef3ed49f_pexels-tom-balabaud-1579708.jpg', 'France', 'Vienne', '48, Place du Jeu de Paume', 38200, 8, 64, 7, '2023-03-13 11:46:11');
+(83, 'TV vintage', 'Vente de téléviseurs vintages', 'Vente de téléviseurs vintages, différents couleurs, modelés et styles. Il sont personnalisables, idéaux pour votre des campagnes de visualisation, posters, évènements', 290, '6414540ccd899_pexels-koolshooters-6976094.jpg', 'France', 'Vienne', '48, Place du Jeu de Paume', 38200, 8, 63, 5, '2023-03-13 11:40:15'),
+(84, 'Cadres photos', 'Cadres photo vintages', 'Vente de cadres photos vintages, personnalisables avec la taille, couleur et format de vous besoin.', 55, '640efef3ed49f_pexels-tom-balabaud-1579708.jpg', 'France', 'Vienne', '48, Place du Jeu de Paume', 38200, 8, 64, 7, '2023-03-13 11:46:11'),
+(89, 'Drapeu', 'Obtenez votre drapeau préféré dès maintenant', 'Nous vous proposons une large sélection de drapeaux de haute qualité pour votre usage personnel ou professionnel. Nous avons une variété de drapeaux nationaux, drapeaux de l\'Union européenne, drapeaux régionaux, drapeaux sportifs et drapeaux de décoration pour répondre à tous vos besoins.', 35, '6414c63909a7d_pexels-engin-akyurt-15868933.jpg', 'France', 'Lormont', '37 Rue Hubert de Lisle', 33310, 13, 69, 7, '2023-03-17 20:46:56');
 
 -- --------------------------------------------------------
 
@@ -132,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `membre` (
   `date_enregistrement` datetime NOT NULL,
   PRIMARY KEY (`id_membre`),
   UNIQUE KEY `pseudo` (`pseudo`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `membre`
@@ -140,14 +139,15 @@ CREATE TABLE IF NOT EXISTS `membre` (
 
 INSERT INTO `membre` (`id_membre`, `pseudo`, `mdp`, `nom`, `prenom`, `telephone`, `email`, `civilite`, `statut`, `date_enregistrement`) VALUES
 (1, 'keke_123', '$2y$10$rOkyjIl6qbD3cx7sqQRjMesAJ4Owh6RZlGExW5Q8XSypcXj43NQja', 'suarez', 'keke', '0715245123', 'keke@gmail.com', 'homme', 1, '2023-03-07 13:26:09'),
-(2, 'perfil-test', '$2y$10$41kKrJdxEmnDrdzuco.P5.v4NMJJ/fWaeAla7fEPyFhQKZWm0ohdi', 'perfil', 'test', '0152456989', 'perfil-test@gmail.com', 'homme', 0, '2023-03-07 21:22:14'),
 (3, 'meghan.stanley', '$2y$10$9eIeP/f7JOBADbcZRuaOXe/xPV2pYMB9jrA4Rh5ByzGDdnH.6sKAi', 'Stanley', 'Meghan', '0768514232', 'meghan.stanley@example.com', 'femme', 0, '2023-03-08 22:15:58'),
 (4, 'louella.rodriguez', '$2y$10$nOxS2LjJ1SjMV.ZQVcCNbev0BFtJ6gyoi7elCakCL0GtnNIWPAypW', 'Rodriguez', 'Rodriguez', '0752145265', 'louella.rodriguez@example.com', 'femme', 0, '2023-03-09 12:23:47'),
 (5, 'ArnaudLaramee', '$2y$10$.Wm5L7vcgmslCJd8CkBzTuqrQ7XvxOuqul60Odgkh9ABe7fNhuiw2', 'Laramée', 'Arnaud', '0621834080', 'ArnaudLaramee@jourrapide.com', 'homme', 0, '2023-03-13 09:28:44'),
 (6, 'YvesCharrette', '$2y$10$7Kp1KWg3BER9O8sh1JVU8u4nIHRBM..Yv1ljj1dMfeaHE13Lsv/JW', 'Charrette', 'Yves', '0495240132', 'YvesCharrette@armyspy.com', 'homme', 0, '2023-03-13 10:12:38'),
 (7, 'EmmanuelleTrudeau', '$2y$10$WXcRxGJbNEllQ7nAQSEQmO9Ek0ALMarh.cnxVd4QTw1rzalFDsDcW', 'Trudeau', 'Emmanuelle', '0732288091', 'EmmanuelleTrudeau@dayrep.com', 'femme', 0, '2023-03-13 10:28:39'),
 (8, 'GermainPaquet', '$2y$10$dzUHb5IRan.uhi5nQZ0Ti.2mY8CZA7SZnTmvVmUbOYr5RFml3eQ7m', 'Paquet', 'Germain', '0758675215', 'GermainPaquet@rhyta.com', 'homme', 0, '2023-03-13 11:17:43'),
-(9, 'MorganaFecteau', '$2y$10$21r1kujdzhEufPbqQ5gnjOAXXgP3amZyyvNmfda2.Ww4Hb.SEmZRC', 'Fecteau', 'Morgana', '0654952366', 'MorganaFecteau@rhyta.com', 'femme', 0, '2023-03-13 12:04:09');
+(9, 'MorganaFecteau', '$2y$10$21r1kujdzhEufPbqQ5gnjOAXXgP3amZyyvNmfda2.Ww4Hb.SEmZRC', 'Fecteau', 'Morgana', '0654952366', 'MorganaFecteau@rhyta.com', 'femme', 0, '2023-03-13 12:04:09'),
+(10, 'perry.rodriquez', '$2y$10$pNv5noiDCnCywTi6mU/1UOfz0JanQPzXt71c9vNGCCVY6oeyJqEX6', 'Rodriquez', 'Perry', '0782546985', 'perry.rodriquez@example.com', 'homme', 0, '2023-03-17 14:01:29'),
+(13, 'marion.jacobs', '$2y$10$zvCf5phYGcwBeXwkZdU5ZuDJLqqrDqksW1GlWRFd0nbBxbe42IhIe', 'Jacbos', 'Marion', '0754854550', 'marion.jacobs@example.com', 'homme', 0, '2023-03-17 19:41:46');
 
 -- --------------------------------------------------------
 
@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `photo4` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `photo5` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id_photo`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `photo`
@@ -221,7 +221,12 @@ INSERT INTO `photo` (`id_photo`, `photo1`, `photo2`, `photo3`, `photo4`, `photo5
 (61, '640ee98e0ab23_pexels-asap-jpeg-10749014.jpg', '640ee98e0aeed_pexels-russ-petcoff-2559026.jpg', '640ee98e0b203_pexels-jonathan-petersson-436381.jpg', '640ee98e0b57c_pexels-rhubia-santos-9278503.jpg', '640ee98e0b92b_pexels-dids-7450360.jpg'),
 (62, '640ef3660ae91_pexels-negative-space-48605.jpg', '640ef3660b1d8_pexels-jess-bailey-designs-788946.jpg', '640ef3660b4a4_pexels-freestocksorg-987585.jpg', '640ef3660bb9c_pexels-miesha-renae-maiden-429862.jpg', '640ef3660c0b9_pexels-freestocksorg-688963.jpg'),
 (63, '640efd8f1e74c_pexels-burak-the-weekender-704555.jpg', '640efd8f1e992_pexels-huỳnh-đạt-2251206.jpg', '640efd8f1ec7c_pexels-cottonbro-studio-4842638.jpg', '640efd8f1efe3_pexels-anete-lusina-5721879.jpg', '640efd8f1f2a9_pexels-anete-lusina-5721905.jpg'),
-(64, '640efef3ed80c_pexels-tom-balabaud-1579708.jpg', '640efef3edaef_pexels-mister-mister-2442904.jpg', '640efef3ede55_pexels-azra-tuba-demir-8483097.jpg', '640efef3ee1cf_pexels-beyzaa-yurtkuran-14471016.jpg', '640efef3ee4ab_pexels-sara-garnica-2011173.jpg');
+(64, '640efef3ed80c_pexels-tom-balabaud-1579708.jpg', '640efef3edaef_pexels-mister-mister-2442904.jpg', '640efef3ede55_pexels-azra-tuba-demir-8483097.jpg', '640efef3ee1cf_pexels-beyzaa-yurtkuran-14471016.jpg', '640efef3ee4ab_pexels-sara-garnica-2011173.jpg'),
+(65, '6414c23631ce1_pexels-engin-akyurt-15869113.jpg', '6414c2363201c_pexels-engin-akyurt-15652226.jpg', '6414c236323f8_pexels-engin-akyurt-15868916.jpg', '6414c23632741_pexels-engin-akyurt-15651883.jpg', '6414c23632ac3_pexels-engin-akyurt-15651835.jpg'),
+(66, '6414c25f82df2_pexels-engin-akyurt-15869113.jpg', '6414c25f830bc_pexels-engin-akyurt-15652226.jpg', '6414c25f833c1_pexels-engin-akyurt-15868916.jpg', '6414c25f8376c_pexels-engin-akyurt-15651883.jpg', '6414c25f83ab3_pexels-engin-akyurt-15651835.jpg'),
+(67, '6414c28e40217_pexels-engin-akyurt-15869113.jpg', '6414c28e40580_pexels-engin-akyurt-15652226.jpg', '6414c28e408d5_pexels-engin-akyurt-15868916.jpg', '6414c28e40c0d_pexels-engin-akyurt-15651883.jpg', '6414c28e40f35_pexels-engin-akyurt-15651835.jpg'),
+(68, '6414c30e7a234_pexels-engin-akyurt-15869113.jpg', '6414c30e7a4ad_pexels-engin-akyurt-15652226.jpg', '6414c30e7a816_pexels-engin-akyurt-15868916.jpg', '6414c30e7ab32_pexels-engin-akyurt-15651883.jpg', '6414c30e7aec5_pexels-engin-akyurt-15651835.jpg'),
+(69, '6414c3b023dfc_pexels-engin-akyurt-15869113.jpg', '6414c3b02419c_pexels-engin-akyurt-15652226.jpg', '6414c3b024552_pexels-engin-akyurt-15868916.jpg', '6414c3b02487f_pexels-engin-akyurt-15651883.jpg', '6414c3b024bc1_pexels-engin-akyurt-15651835.jpg');
 
 --
 -- Contraintes pour les tables déchargées
