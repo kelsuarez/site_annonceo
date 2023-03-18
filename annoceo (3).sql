@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 17 mars 2023 à 20:20
+-- Généré le : sam. 18 mars 2023 à 08:04
 -- Version du serveur : 8.0.31
 -- Version de PHP : 8.0.26
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `annonce` (
   UNIQUE KEY `photo_id` (`photo_id`),
   KEY `membre_id` (`membre_id`) USING BTREE,
   KEY `categorie_id` (`categorie_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `annonce`
@@ -61,7 +61,8 @@ INSERT INTO `annonce` (`id_annonce`, `titre`, `description_courte`, `description
 (82, 'Iphone 6', 'Vend iphone 6', 'Je vend mon iPhone 6 comme neuf', 550, '640ef3660ab84_pexels-torsten-dettlaff-56904.jpg', 'France', 'Dijon', '5, rue des lieutemants Thomazo', 21000, 7, 62, 5, '2023-03-13 10:56:54'),
 (83, 'TV vintage', 'Vente de téléviseurs vintages', 'Vente de téléviseurs vintages, différents couleurs, modelés et styles. Il sont personnalisables, idéaux pour votre des campagnes de visualisation, posters, évènements', 290, '6414540ccd899_pexels-koolshooters-6976094.jpg', 'France', 'Vienne', '48, Place du Jeu de Paume', 38200, 8, 63, 5, '2023-03-13 11:40:15'),
 (84, 'Cadres photos', 'Cadres photo vintages', 'Vente de cadres photos vintages, personnalisables avec la taille, couleur et format de vous besoin.', 55, '640efef3ed49f_pexels-tom-balabaud-1579708.jpg', 'France', 'Vienne', '48, Place du Jeu de Paume', 38200, 8, 64, 7, '2023-03-13 11:46:11'),
-(89, 'Drapeu', 'Obtenez votre drapeau préféré dès maintenant', 'Nous vous proposons une large sélection de drapeaux de haute qualité pour votre usage personnel ou professionnel. Nous avons une variété de drapeaux nationaux, drapeaux de l\'Union européenne, drapeaux régionaux, drapeaux sportifs et drapeaux de décoration pour répondre à tous vos besoins.', 35, '6414c63909a7d_pexels-engin-akyurt-15868933.jpg', 'France', 'Lormont', '37 Rue Hubert de Lisle', 33310, 13, 69, 7, '2023-03-17 20:46:56');
+(89, 'Drapeu', 'Obtenez votre drapeau préféré dès maintenant', 'Nous vous proposons une large sélection de drapeaux de haute qualité pour votre usage personnel ou professionnel. Nous avons une variété de drapeaux nationaux, drapeaux de l\'Union européenne, drapeaux régionaux, drapeaux sportifs et drapeaux de décoration pour répondre à tous vos besoins.', 35, '641568315b70b_pexels-engin-akyurt-15868933.jpg', 'France', 'Lormont', '37 Rue Hubert de Lisle', 33310, 13, 69, 7, '2023-03-17 20:46:56'),
+(90, 'Bijouterie', 'Bijouterie chapé or', 'Nous sommes ravis de vous présenter notre collection de bijouteries de la marque Chapé Or. Les bijoux Chapé Or sont reconnus pour leur qualité exceptionnelle et leur design élégant.\r\n\r\nNotre collection comprend une variété de bijoux tels que des bagues, des colliers, des bracelets, des boucles d\'oreilles et des montres, qui peuvent être portés pour toutes les occasions. Que vous recherchiez un bijou classique pour votre tenue de travail ou un accessoire audacieux pour une soirée, nous avons ce qu\'il vous faut.\r\n\r\nTous nos bijoux sont fabriqués avec des matériaux de haute qualité tels que l\'or, l\'argent et les pierres précieuses pour assurer une longue durée de vie. Nous offrons également une garantie de satisfaction à 100%, ce qui signifie que si vous n\'êtes pas entièrement satisfait de votre achat, nous ferons tout notre possible pour trouver une solution.', 200, '6415664848d0f_pexels-lumn-4155253.jpg', 'France', 'Lormont', '37 Rue Hubert de Lisle', 33310, 13, 70, 10, '2023-03-18 08:20:40');
 
 -- --------------------------------------------------------
 
@@ -183,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `photo4` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `photo5` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id_photo`)
-) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `photo`
@@ -226,7 +227,8 @@ INSERT INTO `photo` (`id_photo`, `photo1`, `photo2`, `photo3`, `photo4`, `photo5
 (66, '6414c25f82df2_pexels-engin-akyurt-15869113.jpg', '6414c25f830bc_pexels-engin-akyurt-15652226.jpg', '6414c25f833c1_pexels-engin-akyurt-15868916.jpg', '6414c25f8376c_pexels-engin-akyurt-15651883.jpg', '6414c25f83ab3_pexels-engin-akyurt-15651835.jpg'),
 (67, '6414c28e40217_pexels-engin-akyurt-15869113.jpg', '6414c28e40580_pexels-engin-akyurt-15652226.jpg', '6414c28e408d5_pexels-engin-akyurt-15868916.jpg', '6414c28e40c0d_pexels-engin-akyurt-15651883.jpg', '6414c28e40f35_pexels-engin-akyurt-15651835.jpg'),
 (68, '6414c30e7a234_pexels-engin-akyurt-15869113.jpg', '6414c30e7a4ad_pexels-engin-akyurt-15652226.jpg', '6414c30e7a816_pexels-engin-akyurt-15868916.jpg', '6414c30e7ab32_pexels-engin-akyurt-15651883.jpg', '6414c30e7aec5_pexels-engin-akyurt-15651835.jpg'),
-(69, '6414c3b023dfc_pexels-engin-akyurt-15869113.jpg', '6414c3b02419c_pexels-engin-akyurt-15652226.jpg', '6414c3b024552_pexels-engin-akyurt-15868916.jpg', '6414c3b02487f_pexels-engin-akyurt-15651883.jpg', '6414c3b024bc1_pexels-engin-akyurt-15651835.jpg');
+(69, '6414c3b023dfc_pexels-engin-akyurt-15869113.jpg', '6414c3b02419c_pexels-engin-akyurt-15652226.jpg', '6414c3b024552_pexels-engin-akyurt-15868916.jpg', '6414c3b02487f_pexels-engin-akyurt-15651883.jpg', '6414c3b024bc1_pexels-engin-akyurt-15651835.jpg'),
+(70, '641566484901c_pexels-lumn-4155254.jpg', '64156648492d4_pexels-lumn-4155250.jpg', '641566484959a_pexels-lumn-4155249.jpg', '6415664849880_pexels-lumn-4155247.jpg', '6415664849b73_pexels-lumn-4155248.jpg');
 
 --
 -- Contraintes pour les tables déchargées
