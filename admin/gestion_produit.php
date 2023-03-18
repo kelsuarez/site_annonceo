@@ -450,6 +450,8 @@ require_once('includeAdmin/header.php');
                             <td><?= $value ?> €</td>
                         <?php elseif ($key == 'photo') : ?>
                             <td><img class="img-fluid" src="<?= URL . 'img/' . $value ?>" width="50" loading="lazy"></td>
+                        <?php elseif ($key == 'description_longue') : ?>
+                            <td><?=$description_de_longue = substr($value, 0, 50) . "..."?></td>
                         <?php else : ?>
                             <td><?= $value ?></td>
                         <?php endif; ?>

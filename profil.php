@@ -60,185 +60,189 @@ $photoBdd3 = "";
 $photoBdd4 = "";
 $photoBdd5 = "";
 
-if(isset($_GET['action']) && !empty($_POST)){
+// if(isset($_GET['action']) && !empty($_POST)){
 
-    // TITRE
-    if(!isset($_POST['titre']) || !preg_match('#^[a-zA-Z0-9 -_.éà\'è]{2,50}$#', $_POST['titre'])){
-        $erreur .= '<div class="alert alert-danger" role="alert">Erreur format titre !</div>';
-    }
-    // DESCRIPTION COURTE
-        if(!isset($_POST['description_courte']) || iconv_strlen($_POST['description_courte']) <1 || iconv_strlen($_POST['pays']) > 200 ){
-        $erreur .= '<div class="alert alert-danger" role="alert">Erreur format description courte !</div>';
-    }
-    // DESCRIPTION LONGUE
-    if(!isset($_POST['description_longue']) || iconv_strlen($_POST['description_longue']) <1 || iconv_strlen($_POST['pays']) > 500 ){
-        $erreur .= '<div class="alert alert-danger" role="alert">Erreur format description longue !</div>';
-    }
-    // PRIX
-    if(!isset($_POST['prix']) || !preg_match('#^[0-9]{1,10}$#', $_POST['prix'])){
-        $erreur .= '<div class="alert alert-danger" role="alert">Erreur format code prix !</div>';
-    }
-    // CATEGORIE
-    if(!isset($_POST['categorie'])){
-        $erreur .= '<div class="alert alert-danger" role="alert">Erreur format categorie !</div>';
-    }
-    // PHOTO
-    if(isset($_FILES['fichier']) && $_FILES['fichier']['error'] == 0) {
-        if ($_FILES['fichier']['size'] > $_POST['MAX_FILE_SIZE']) {
-            echo "Le fichier téléchargé est trop volumineux.";
+if(isset($_GET['action'])){
+
+    if ($_POST){
+
+        // TITRE
+        if(!isset($_POST['titre']) || !preg_match('#^[a-zA-Z0-9 -_.éà\'è]{2,50}$#', $_POST['titre'])){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format titre !</div>';
         }
-        $allowed = array('pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'jpeg', 'png');
-        $filename = $_FILES['fichier']['name'];
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
-        if(!in_array($ext, $allowed)) {
-            echo "Le type de fichier n'est pas autorisé.";
+        // DESCRIPTION COURTE
+            if(!isset($_POST['description_courte']) || iconv_strlen($_POST['description_courte']) <1 || iconv_strlen($_POST['pays']) > 200 ){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format description courte !</div>';
+        }
+        // DESCRIPTION LONGUE
+        if(!isset($_POST['description_longue']) || iconv_strlen($_POST['description_longue']) <1 || iconv_strlen($_POST['pays']) > 500 ){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format description longue !</div>';
+        }
+        // PRIX
+        if(!isset($_POST['prix']) || !preg_match('#^[0-9]{1,10}$#', $_POST['prix'])){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format code prix !</div>';
+        }
+        // CATEGORIE
+        if(!isset($_POST['categorie'])){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format categorie !</div>';
+        }
+        // PHOTO
+        if(isset($_FILES['fichier']) && $_FILES['fichier']['error'] == 0) {
+            if ($_FILES['fichier']['size'] > $_POST['MAX_FILE_SIZE']) {
+                echo "Le fichier téléchargé est trop volumineux.";
+            }
+            $allowed = array('pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'jpeg', 'png');
+            $filename = $_FILES['fichier']['name'];
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            if(!in_array($ext, $allowed)) {
+                echo "Le type de fichier n'est pas autorisé.";
+            }
+        }
+        // PAYS
+        if(!isset($_POST['pays']) || iconv_strlen($_POST['pays']) < 3 || iconv_strlen($_POST['pays']) > 20 ){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format pays !</div>';
+        }
+        // VILLE
+        if(!isset($_POST['ville']) || strlen($_POST['ville']) < 2 || strlen($_POST['ville']) > 30 ){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format ville !</div>';
+        }
+        //ADRESSE
+        if(!isset($_POST['adresse']) || strlen($_POST['adresse']) < 5 || strlen($_POST['adresse']) > 50 ){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format adresse !</div>';
+        }
+        // CODE POSTAL
+        if(!isset($_POST['cp']) || !preg_match('#^[0-9]{5}$#', $_POST['cp'])){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format code postal !</div>';
+        }
+        // TRAITEMENT PHOTO
+        $photoBdd = (!empty($_POST['photo_actuelle'])) ? $_POST['photo_actuelle'] : "";
+        // if($_GET['action'] == 'update'){
+        //     $photoBdd = $_POST['photo_actuelle'];
+        // }
+
+        if(!empty($_FILES['photo']['name'])){
+            $photo_nom = uniqid() . '_' . $_FILES['photo']['name'];
+            $photoBdd = "$photo_nom";
+            $photoDossier = RACINE_SITE . "img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+                copy($_FILES['photo']['tmp_name'], $photoDossier);
+            } else {
+                echo "Une erreur est survenue lors du téléchargement du fichier.";
+            }
+        }
+        // A VOIR POUR LES 5 AUTRES PHOTOS
+
+        if(!empty($_FILES['photo1']['name'])){
+            $photo_nom = uniqid() . '_' . $_FILES['photo1']['name'];
+            $photoBdd1 = "$photo_nom";
+            $photoDossier = RACINE_SITE . "img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo1']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+                copy($_FILES['photo1']['tmp_name'], $photoDossier);
+            } else {
+                echo "Une erreur est survenue lors du téléchargement du fichier.";
+            }
+        }
+        if(!empty($_FILES['photo2']['name'])){
+            $photo_nom = uniqid() . '_' . $_FILES['photo2']['name'];
+            $photoBdd2 = "$photo_nom";
+            $photoDossier = RACINE_SITE . "img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo2']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+                copy($_FILES['photo2']['tmp_name'], $photoDossier);
+            } else {
+                echo "Une erreur est survenue lors du téléchargement du fichier.";
+            }
+        }
+        if(!empty($_FILES['photo3']['name'])){
+            $photo_nom = uniqid() . '_' . $_FILES['photo3']['name'];
+            $photoBdd3 = "$photo_nom";
+            $photoDossier = RACINE_SITE . "img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo3']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+                copy($_FILES['photo3']['tmp_name'], $photoDossier);
+            } else {
+                echo "Une erreur est survenue lors du téléchargement du fichier.";
+            }
+        }
+        if(!empty($_FILES['photo4']['name'])){
+            $photo_nom = uniqid() . '_' . $_FILES['photo4']['name'];
+            $photoBdd4 = "$photo_nom";
+            $photoDossier = RACINE_SITE . "img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo4']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+                copy($_FILES['photo4']['tmp_name'], $photoDossier);
+            } else {
+                echo "Une erreur est survenue lors du téléchargement du fichier.";
+            }
+        }
+        if(!empty($_FILES['photo5']['name'])){
+            $photo_nom = uniqid() . '_' . $_FILES['photo5']['name'];
+            $photoBdd5 = "$photo_nom";
+            $photoDossier = RACINE_SITE . "img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo5']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+                copy($_FILES['photo5']['tmp_name'], $photoDossier);
+            } else {
+                echo "Une erreur est survenue lors du téléchargement du fichier.";
+            }
+        }
+
+        // REQUETTE DE SI PAS DE ERREUR ON PEUT CONTINUER
+        if(empty($erreur)){
+            
+            // REQUETTE DE UPDATE
+            if($_GET['action'] == 'update'){
+                $modifAnnonce = $pdo->prepare("UPDATE annonce SET id_annonce = :id_annonce, titre = :titre, description_courte = :description_courte, description_longue = :description_longue, prix = :prix, pays = :pays, ville = :ville, adresse = :adresse, cp = :cp, categorie_id = :categorie_id, photo = :photo  WHERE id_annonce = :id_annonce");
+                $modifAnnonce->bindValue(':id_annonce', $_POST['id_annonce'], PDO::PARAM_INT);
+                $modifAnnonce->bindValue(':titre', $_POST['titre'], PDO::PARAM_STR);
+                $modifAnnonce->bindValue(':description_courte', $_POST['description_courte'], PDO::PARAM_STR);
+                $modifAnnonce->bindValue(':description_longue', $_POST['description_longue'], PDO::PARAM_STR);
+                $modifAnnonce->bindValue(':prix', $_POST['prix'], PDO::PARAM_STR);
+                $modifAnnonce->bindValue(':pays', $_POST['pays'], PDO::PARAM_STR);
+                $modifAnnonce->bindValue(':ville', $_POST['ville'], PDO::PARAM_STR);
+                $modifAnnonce->bindValue(':adresse', $_POST['adresse'], PDO::PARAM_STR);
+                $modifAnnonce->bindValue(':cp', $_POST['cp'], PDO::PARAM_STR);
+                $modifAnnonce->bindValue(':categorie_id', $_POST['categorie_id'], PDO::PARAM_STR);
+                $modifAnnonce->bindValue(':photo', $photoBdd, PDO::PARAM_STR);
+                $modifAnnonce->execute();
+
+                // MESSAGE DE VALIDATION A L'ENVOI
+                $queryAnnonce = $pdo->query("SELECT titre FROM annonce WHERE id_annonce = '$_GET[id_annonce]'");
+                $annonce = $queryAnnonce->fetch(PDO::FETCH_ASSOC);
+                $content .= '<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
+                                <strong>Félicitations !</strong> Modification de produit ' . $annonce['titre'] .  ' est réussie 😉!
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>';
+            }else{
+
+                $incluirePhoto = $pdo->prepare("INSERT INTO photo (photo1, photo2, photo3, photo4, photo5) VALUES (:photo1, :photo2, :photo3, :photo4, :photo5)");
+
+                $incluirePhoto->bindParam(':photo1', $photoBdd1);
+                $incluirePhoto->bindParam(':photo2', $photoBdd2);
+                $incluirePhoto->bindParam(':photo3', $photoBdd3);
+                $incluirePhoto->bindParam(':photo4', $photoBdd4);
+                $incluirePhoto->bindParam(':photo5', $photoBdd5);
+                $incluirePhoto->execute();
+
+                $photo_id = $pdo->lastInsertId();
+
+                // REQUETTE DE INSERTION A LA BDD
+                $incluireAnnonce = $pdo->prepare("INSERT INTO annonce (titre, description_courte, description_longue, prix, photo, pays, ville, adresse, cp, membre_id, categorie_id, date_enregistrement, photo_id) VALUES (:titre, :description_courte, :description_longue, :prix, :photo, :pays, :ville, :adresse, :cp, :membre_id, :categorie_id, NOW(), :photo_id)");
+
+                $incluireAnnonce->bindParam(':titre', $_POST['titre']);
+                $incluireAnnonce->bindParam(':description_courte', $_POST['description_courte']);
+                $incluireAnnonce->bindParam(':description_longue', $_POST['description_longue']);
+                $incluireAnnonce->bindParam(':prix', $_POST['prix']);
+                $incluireAnnonce->bindParam(':photo', $photoBdd);
+                $incluireAnnonce->bindParam(':pays', $_POST['pays']);
+                $incluireAnnonce->bindParam(':ville', $_POST['ville']);
+                $incluireAnnonce->bindParam(':adresse', $_POST['adresse']);
+                $incluireAnnonce->bindParam(':cp', $_POST['cp']);
+                $incluireAnnonce->bindParam(':membre_id', $id_membre);
+                $incluireAnnonce->bindParam(':photo_id', $photo_id);
+                $incluireAnnonce->bindValue(':categorie_id', $_POST['categorie']);
+                $incluireAnnonce->execute();
+            }
         }
     }
-    // PAYS
-    if(!isset($_POST['pays']) || iconv_strlen($_POST['pays']) < 3 || iconv_strlen($_POST['pays']) > 20 ){
-        $erreur .= '<div class="alert alert-danger" role="alert">Erreur format pays !</div>';
-    }
-    // VILLE
-    if(!isset($_POST['ville']) || strlen($_POST['ville']) < 2 || strlen($_POST['ville']) > 30 ){
-        $erreur .= '<div class="alert alert-danger" role="alert">Erreur format ville !</div>';
-    }
-    //ADRESSE
-    if(!isset($_POST['adresse']) || strlen($_POST['adresse']) < 5 || strlen($_POST['adresse']) > 50 ){
-        $erreur .= '<div class="alert alert-danger" role="alert">Erreur format adresse !</div>';
-    }
-    // CODE POSTAL
-    if(!isset($_POST['cp']) || !preg_match('#^[0-9]{5}$#', $_POST['cp'])){
-        $erreur .= '<div class="alert alert-danger" role="alert">Erreur format code postal !</div>';
-    }
-    // TRAITEMENT PHOTO
-    $photoBdd = (!empty($_POST['photo_actuelle'])) ? $_POST['photo_actuelle'] : "";
-    // if($_GET['action'] == 'update'){
-    //     $photoBdd = $_POST['photo_actuelle'];
-    // }
-
-    if(!empty($_FILES['photo']['name'])){
-        $photo_nom = uniqid() . '_' . $_FILES['photo']['name'];
-        $photoBdd = "$photo_nom";
-        $photoDossier = RACINE_SITE . "img/$photo_nom";
-        if(is_uploaded_file($_FILES['photo']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
-            copy($_FILES['photo']['tmp_name'], $photoDossier);
-        } else {
-            echo "Une erreur est survenue lors du téléchargement du fichier.";
-        }
-    }
-    // A VOIR POUR LES 5 AUTRES PHOTOS
-
-    if(!empty($_FILES['photo1']['name'])){
-        $photo_nom = uniqid() . '_' . $_FILES['photo1']['name'];
-        $photoBdd1 = "$photo_nom";
-        $photoDossier = RACINE_SITE . "img/$photo_nom";
-        if(is_uploaded_file($_FILES['photo1']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
-            copy($_FILES['photo1']['tmp_name'], $photoDossier);
-        } else {
-            echo "Une erreur est survenue lors du téléchargement du fichier.";
-        }
-    }
-    if(!empty($_FILES['photo2']['name'])){
-        $photo_nom = uniqid() . '_' . $_FILES['photo2']['name'];
-        $photoBdd2 = "$photo_nom";
-        $photoDossier = RACINE_SITE . "img/$photo_nom";
-        if(is_uploaded_file($_FILES['photo2']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
-            copy($_FILES['photo2']['tmp_name'], $photoDossier);
-        } else {
-            echo "Une erreur est survenue lors du téléchargement du fichier.";
-        }
-    }
-    if(!empty($_FILES['photo3']['name'])){
-        $photo_nom = uniqid() . '_' . $_FILES['photo3']['name'];
-        $photoBdd3 = "$photo_nom";
-        $photoDossier = RACINE_SITE . "img/$photo_nom";
-        if(is_uploaded_file($_FILES['photo3']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
-            copy($_FILES['photo3']['tmp_name'], $photoDossier);
-        } else {
-            echo "Une erreur est survenue lors du téléchargement du fichier.";
-        }
-    }
-    if(!empty($_FILES['photo4']['name'])){
-        $photo_nom = uniqid() . '_' . $_FILES['photo4']['name'];
-        $photoBdd4 = "$photo_nom";
-        $photoDossier = RACINE_SITE . "img/$photo_nom";
-        if(is_uploaded_file($_FILES['photo4']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
-            copy($_FILES['photo4']['tmp_name'], $photoDossier);
-        } else {
-            echo "Une erreur est survenue lors du téléchargement du fichier.";
-        }
-    }
-    if(!empty($_FILES['photo5']['name'])){
-        $photo_nom = uniqid() . '_' . $_FILES['photo5']['name'];
-        $photoBdd5 = "$photo_nom";
-        $photoDossier = RACINE_SITE . "img/$photo_nom";
-        if(is_uploaded_file($_FILES['photo5']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
-            copy($_FILES['photo5']['tmp_name'], $photoDossier);
-        } else {
-            echo "Une erreur est survenue lors du téléchargement du fichier.";
-        }
-    }
-
-    // REQUETTE DE SI PAS DE ERREUR ON PEUT CONTINUER
-    if(empty($erreur)){
-        
-        // REQUETTE DE UPDATE
-        if($_GET['action'] == 'update'){
-            $modifAnnonce = $pdo->prepare("UPDATE annonce SET id_annonce = :id_annonce, titre = :titre, description_courte = :description_courte, description_longue = :description_longue, prix = :prix, pays = :pays, ville = :ville, adresse = :adresse, cp = :cp, prix = :prix, stock = :stock, categorie_id = :categorie_id, photo = :photo  WHERE id_annonce = :id_annonce");
-            $modifAnnonce->bindValue(':id_annonce', $_POST['id_annonce'], PDO::PARAM_INT);
-            $modifAnnonce->bindValue(':titre', $_POST['titre'], PDO::PARAM_STR);
-            $modifAnnonce->bindValue(':description_courte', $_POST['description_courte'], PDO::PARAM_STR);
-            $modifAnnonce->bindValue(':description_longue', $_POST['description_longue'], PDO::PARAM_STR);
-            $modifAnnonce->bindValue(':prix', $_POST['prix'], PDO::PARAM_STR);
-            $modifAnnonce->bindValue(':pays', $_POST['pays'], PDO::PARAM_STR);
-            $modifAnnonce->bindValue(':ville', $_POST['ville'], PDO::PARAM_STR);
-            $modifAnnonce->bindValue(':adresse', $_POST['adresse'], PDO::PARAM_STR);
-            $modifAnnonce->bindValue(':cp', $_POST['cp'], PDO::PARAM_STR);
-            $modifAnnonce->bindValue(':categorie_id', $_POST['categorie'], PDO::PARAM_STR);
-            $modifAnnonce->bindValue(':photo', $photoBdd, PDO::PARAM_STR);
-            $modifAnnonce->execute();
-
-            // MESSAGE DE VALIDATION A L'ENVOI
-            $queryProduit = $pdo->query("SELECT titre FROM annonce WHERE id_annonce = '$_GET[id_annonce]'");
-            $annonce = $queryAnnonce->fetch(PDO::FETCH_ASSOC);
-            $content .= '<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
-                            <strong>Félicitations !</strong> Modification de produit ' . $annonce['titre'] .  ' est réussie 😉!
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>';
-        }else{
-
-            $incluirePhoto = $pdo->prepare("INSERT INTO photo (photo1, photo2, photo3, photo4, photo5) VALUES (:photo1, :photo2, :photo3, :photo4, :photo5)");
-
-            $incluirePhoto->bindParam(':photo1', $photoBdd1);
-            $incluirePhoto->bindParam(':photo2', $photoBdd2);
-            $incluirePhoto->bindParam(':photo3', $photoBdd3);
-            $incluirePhoto->bindParam(':photo4', $photoBdd4);
-            $incluirePhoto->bindParam(':photo5', $photoBdd5);
-            $incluirePhoto->execute();
-
-            $photo_id = $pdo->lastInsertId();
-
-            // REQUETTE DE INSERTION A LA BDD
-            $incluireAnnonce = $pdo->prepare("INSERT INTO annonce (titre, description_courte, description_longue, prix, photo, pays, ville, adresse, cp, membre_id, categorie_id, date_enregistrement, photo_id) VALUES (:titre, :description_courte, :description_longue, :prix, :photo, :pays, :ville, :adresse, :cp, :membre_id, :categorie_id, NOW(), :photo_id)");
-
-            $incluireAnnonce->bindParam(':titre', $_POST['titre']);
-            $incluireAnnonce->bindParam(':description_courte', $_POST['description_courte']);
-            $incluireAnnonce->bindParam(':description_longue', $_POST['description_longue']);
-            $incluireAnnonce->bindParam(':prix', $_POST['prix']);
-            $incluireAnnonce->bindParam(':photo', $photoBdd);
-            $incluireAnnonce->bindParam(':pays', $_POST['pays']);
-            $incluireAnnonce->bindParam(':ville', $_POST['ville']);
-            $incluireAnnonce->bindParam(':adresse', $_POST['adresse']);
-            $incluireAnnonce->bindParam(':cp', $_POST['cp']);
-            $incluireAnnonce->bindParam(':membre_id', $id_membre);
-            $incluireAnnonce->bindParam(':photo_id', $photo_id);
-            $incluireAnnonce->bindValue(':categorie_id', $_POST['categorie']);
-            $incluireAnnonce->execute();
-        }
-    }
-
     // REQUETTE DE UPDATE
     if($_GET['action'] == 'update'){
         $tousAnnonce = $pdo->query("SELECT * FROM annonce WHERE id_annonce = '$_GET[id_annonce]'");
@@ -271,12 +275,6 @@ require_once('include/header.php');
 ?>
 
 <?= $erreur ?>
-<?= debug($id_annonce); ?>
-
-<div class="col-md-12">
-            <?php echo '<pre>'; print_r($infos_annonce); echo '</pre>'; ?>
-            <?php echo '<pre>'; var_dump($infos_photos_annexes); echo '</pre>'; ?>
-        </div>
 
     <!-- MESSAGE DE BIENVENUE  -->
     <h2 class="text-center my-5 display-5">
@@ -361,7 +359,7 @@ require_once('include/header.php');
                 <tr class="col-12">
                     <?php for($i = 0; $i < $afficheAnnonces->columnCount(); $i++):
                         $colonne = $afficheAnnonces->getColumnMeta($i); ?>
-                        <?php if($colonne['name'] != 'membre_id'): ?>
+                        <?php if($colonne['name'] != 'membre_id' && $colonne['name'] != 'photo_id' && $colonne['name'] != 'categorie_id' && $colonne['name'] != 'id_annonce'): ?>
                             <th class=""><?= $colonne['name']?></th>
                         <?php endif; ?>
                     <?php endfor ;?>
@@ -371,15 +369,17 @@ require_once('include/header.php');
             <tbody>
                 <?php while($annonce = $afficheAnnonces->fetch(PDO::FETCH_ASSOC)): ?>
                 <tr>
-                <?php foreach($annonce as $indice => $value): ?>
-                        <?php if($indice == 'prix'):?>
-                            <td> <?php echo $value . '€' ?> </td>
-                        <?php elseif($indice == 'photo'):?>
-                            <td><img class="img-fluid" src="<?= URL . 'img/' . $value ?>" width="200" loading="lazy"></td>
-                        <?php elseif($indice != 'membre_id'):?>
-                            <td> <?php echo $value ?> </td>
+                    <?php foreach($annonce as $indice => $value): ?>
+                        <?php if ($indice != 'membre_id' && $indice != 'photo_id' && $indice != 'categorie_id' && $indice != 'id_annonce'): ?>
+                            <?php if($indice == 'prix'):?>
+                                <td> <?php echo $value . '€' ?> </td>
+                            <?php elseif($indice == 'photo'):?>
+                                <td><img class="img-fluid" src="<?= URL . 'img/' . $value ?>" width="200" loading="lazy"></td>
+                            <?php else:?>
+                                <td> <?php echo $value ?> </td>
+                            <?php endif; ?>
                         <?php endif; ?>
-                        <?php endforeach; ?>
+                    <?php endforeach; ?>
                     <td><a href='?action=update&id_annonce=<?= $annonce['id_annonce']?>'><i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i></a></td>
                     <td><a href='fiche_annonce.php?id_annonce=<?= $annonce['id_annonce'] ?>'><i class="bi bi-eye" style="font-size: 1.5rem;"></i></a></td>
                     <td><a data-href="?action=delete&id_annonce=<?= $annonce['id_annonce']?>" data-toggle="modal" data-target="#confirm-delete"><i class="bi bi-trash" style="font-size: 1.5rem;"></i></a></td>
@@ -521,16 +521,14 @@ require_once('include/header.php');
     <!-- FORMULAIRE -->
     <?php if(isset($_GET['action']) && $_GET['action'] == 'update'): ?>
 
-    <!-- TITLE FORMULAIRE -->
-    <h2 class="my-5 text-center"><u>Formulaire <?= ($_GET['action'] == 'add') ? "d'ajout" : "de modification" ?> des annonces</u></h2>
-
+    <h2 class="my-5 text-center"><u>Formulaire de modification des annonces</u></h2>
 
     <form id="monForm" class="my-5 col-12 mx-auto" method="POST" action="" enctype="multipart/form-data">
 
-        <input type="" name="id_annonce" value="<?= $id_annonce  ?>">
-        <input type="" name="membre_id" value="<?= $id_membre?>">
-        <input type="" name="photo_id" value="<?= $photo_id?>">
-        <input type="" name="categorie_id" value="<?= $categorie_id  ?>">
+        <input type="hidden" name="id_annonce" value="<?= $id_annonce  ?>">
+        <input type="hidden" name="membre_id" value="<?= $id_membre?>">
+        <input type="hidden" name="photo_id" value="<?= $photo_id?>">
+        <input type="hidden" name="categorie_id" value="<?= $categorie_id  ?>">
 
         <div class="d-flex mx-auto mt-5">
             <!-- TITRE -->

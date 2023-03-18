@@ -2,7 +2,7 @@
 
 // requete pour afficher les onglets public (enfant, femme etc... par ordre alphabétique) dans la barre de navigation
 // DISTINCT permet de n'afficher qu'une seule fois l'onglet, sinon, il sera affiché pour autant de produits concernés par ce public
-$afficheMenuPublics = $pdo->query(" SELECT DISTINCT titre FROM categorie ORDER BY titre ASC ");
+//$afficheMenuPublics = $pdo->query(" SELECT DISTINCT titre FROM categorie ORDER BY titre ASC ");
 
 ?>
 
@@ -59,14 +59,14 @@ $afficheMenuPublics = $pdo->query(" SELECT DISTINCT titre FROM categorie ORDER B
           <a class="nav-link display-4 shantellSans text-info" href="<?= URL ?>">Annonceo</a>
         </li>
       <!-- ----------- -->
-      <?php while($menuPublic = $afficheMenuPublics->fetch(PDO::FETCH_ASSOC)): ?>
+      <?php// while($menuPublic = $afficheMenuPublics->fetch(PDO::FETCH_ASSOC)): ?>
       <li class="nav-item">
         <!-- ucfirst permet de donner une majuscule a la première lettre d'un mot -->
         
         <a class="nav-link" href=""><button type="button" class="btn btn-outline-success"></button></a>
         
       </li>
-      <?php endwhile; ?>
+      <?php// endwhile; ?>
       <!-- ---------- -->
     </ul>
     <ul class="navbar-nav ml-auto">
@@ -79,7 +79,7 @@ $afficheMenuPublics = $pdo->query(" SELECT DISTINCT titre FROM categorie ORDER B
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="<?= URL ?>profil.php"><strong>Profil <?= $_SESSION['membre']['pseudo'] ?></strong></a>
-          <a class="dropdown-item" href="<?= URL ?>panier.php"><strong>Panier <?= $_SESSION['membre']['pseudo'] ?></strong></a>
+          <!-- <a class="dropdown-item" href="<?= URL ?>panier.php"><strong>Panier <?= $_SESSION['membre']['pseudo'] ?></strong></a> -->
           <a class="dropdown-item" href="<?= URL ?>connexion.php?action=deconnexion"><strong>Déconnexion</strong></a>
         </div>
       </li>
@@ -96,9 +96,9 @@ $afficheMenuPublics = $pdo->query(" SELECT DISTINCT titre FROM categorie ORDER B
           <a class="dropdown-item" href="<?= URL ?>connexion.php">
             <button class="btn btn-outline-success">Connexion</button>
           </a>
-          <a class="dropdown-item" href="<?= URL ?>panier.php">
+          <!-- <a class="dropdown-item" href="<?= URL ?>panier.php">
             <button class="btn btn-outline-success px-4">Panier</button>
-          </a>
+          </a> -->
         </div>
       </li>
       <?php endif; ?>
