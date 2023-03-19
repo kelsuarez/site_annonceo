@@ -29,7 +29,13 @@ if(!empty($_GET['id_annonce'])) {
     header('location:index.php');
 }
 
-$recup_commentaire = $pdo->query("SELECT * FROM commentaire");
+// $recup_commentaire = $pdo->query("SELECT * FROM commentaire");
+
+// REQUETE RECUP COMMENTAIRE
+$id_annonce = $_GET['id_annonce'];
+$req_commentaires = $pdo->prepare("SELECT commentaire.*, membre.* FROM commentaire, membre WHERE annonce_id = :id_annonce AND id_membre = membre_id");
+$req_commentaires->execute(array('id_annonce' => $id_annonce));
+$commentaires = $req_commentaires->fetchAll(PDO::FETCH_OBJ);
 
 
 require_once('include/affichage.php');
@@ -51,10 +57,10 @@ require_once('include/header.php');
     </div>
     <div class="d-flex mt-5">
         <div class="mx-auto">
-            <img class="img-fluid mr-5" src="<?= URL . 'img/' . $infos_photos_annexes['photo1'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo1'] ?>')">
-            <img class="img-fluid mr-5" src="<?= URL . 'img/' . $infos_photos_annexes['photo2'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo2'] ?>')">
-            <img class="img-fluid mr-5" src="<?= URL . 'img/' . $infos_photos_annexes['photo3'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo3'] ?>')">
-            <img class="img-fluid mr-5" src="<?= URL . 'img/' . $infos_photos_annexes['photo4'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo4'] ?>')">
+            <img class="img-fluid mr-2" src="<?= URL . 'img/' . $infos_photos_annexes['photo1'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo1'] ?>')">
+            <img class="img-fluid mr-2" src="<?= URL . 'img/' . $infos_photos_annexes['photo2'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo2'] ?>')">
+            <img class="img-fluid mr-2" src="<?= URL . 'img/' . $infos_photos_annexes['photo3'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo3'] ?>')">
+            <img class="img-fluid mr-2" src="<?= URL . 'img/' . $infos_photos_annexes['photo4'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo4'] ?>')">
             <img class="img-fluid" src="<?= URL . 'img/' . $infos_photos_annexes['photo5'] ?>" width="250" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo5'] ?>')">
         </div>
     </div>
@@ -71,16 +77,68 @@ require_once('include/header.php');
         </div>
     </div>
     <div class="mt-5 d-flex">
+        
         <h3 class="col-4 mx-auto">Adresse : <?= $infos_annonce['adresse'] . " "?></h3>
         <h3 class="col-4 mx-auto">Ville : <?=$infos_annonce['ville']?></h3>
         <h3 class="col-2 mx-auto">Code postal : <?= $infos_annonce['cp']?></h3>
         <h3 class="col-2 mx-auto">Pays : <?= $infos_annonce['pays']?></h3>
     </div>
+
+    <?php $maps_url = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBLcuhwrabaBuFJuRsgPkTSqyA3leXSmVY&zoom=15&q=" . urlencode($infos_annonce['adresse'] . ' ' . $infos_annonce['ville'] . ' ' . $infos_annonce['cp']); ?>
+
+    <iframe src="<?= $maps_url ?>" width="500" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
     <div class="mx-auto">
         <h3 class="display-4 col-10 text-center mx-auto mt-5 text-underline"><u>Description de l'article</u></h3>
         <h4 class="col-11 mx-auto mt-5"><?= $infos_annonce['description_longue'] ?></h4>
     </div>
+
 </div>
+
+<div class="col-md-5 mx-auto mt-5">
+    <h3 class="text-center">Laisser un commentaire</h3>
+
+    <div class="row">
+        <form action="submit_comment.php" method="post">
+            <label for="name">Nom :</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="comment">Commentaire :</label>
+            <textarea id="comment" name="comment" rows="4" required></textarea>
+
+            <input type="submit" value="Envoyer">
+        </form>
+    </div>
+</div>
+
+<div class="col-md-5 mx-auto mt-5">
+    <h3 class="text-center mb-5">Commentaires</h3>
+    <?php foreach ($commentaires as $commentaire) : ?>
+        <div>
+            <h5>User: <?= $commentaire->pseudo ?></h5>
+            <p>Commentaire: <?= $commentaire->commentaire ?></p>
+            <p><?= $commentaire->date_enregistrement ?></p>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+
+    <?php  echo debug($commentaires); ?>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!-- MODAL DE SUP/MDF-->
@@ -106,12 +164,6 @@ require_once('include/header.php');
         </div>
     </div>
 </div>
-
-
-
-
-
-<div>
 
 
         <div class="col-md-12">

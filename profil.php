@@ -351,7 +351,7 @@ require_once('include/header.php');
         </div>
     </div>
 
-    <!-- AFFICHAGE DE MON TABLEAU PRODUIT -->
+    <!-- AFFICHAGE DE MON TABLEAU ANNONCE -->
     <?php if (isset($_GET['action']) && $_GET['action'] == 'see'): ?>
         <table class="table table-white text-center rounded-1 mt-5 col-11 mx-auto">
             <?php $afficheAnnonces = $pdo->query("SELECT * FROM annonce WHERE membre_id = $id_membre ORDER BY date_enregistrement DESC ");?>
@@ -421,12 +421,7 @@ require_once('include/header.php');
                     <!-- MODULE DESCRIPTION LONGUE -->
                     <div class="col-md-10 mt-4 mx-auto">
                             <label class="form-label" for="description_longue"><div class="badge badge-dark text-wrap">Description longue</div></label>
-                            <textarea 
-                                class="form-control" 
-                                name="description_longue" 
-                                id="description_longue" 
-                                placeholder="Description longue" 
-                                rows="5"><?= $description_longue?></textarea>
+                            <textarea class="form-control" name="description_longue" id="description_longue" placeholder="Description longue" rows="5"><?= $description_longue?></textarea>
                     </div>
 
                     <!-- MODULE PRIX -->
@@ -633,3 +628,17 @@ require_once('include/header.php');
     <?php endif; ?>
 
 <?php require_once('include/footer.php') ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

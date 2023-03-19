@@ -24,8 +24,15 @@ $premierCommentaire = ($pageCourante - 1) * $pagination;
 if (isset($_GET['action'])) {
 
     if ($_POST) {
+
+        if (!isset($_POST['commentaire']) || iconv_strlen($_POST['commentaire']) < 3 || iconv_strlen($_POST['commentaire']) > 500) {
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format commentaire !</div>';
+        }
+
         if (empty($erreur)){
+            
             if ($_GET['action'] == 'update') {
+                
                 $modifCommentaire = $pdo->prepare("UPDATE commentaire SET id_commentaire  = :id_commentaire , membre_id = :membre_id, annonce_id  = :annonce_id, commentaire  = :commentaire WHERE id_commentaire = :id_commentaire");
                 $modifCommentaire->bindValue(':id_commentaire', $_POST['id_commentaire'], PDO::PARAM_INT);
                 $modifCommentaire->bindValue(':membre_id', $_POST['membre_id'], PDO::PARAM_INT);
@@ -33,15 +40,26 @@ if (isset($_GET['action'])) {
                 $modifCommentaire->bindValue(':commentaire', $_POST['commentaire'], PDO::PARAM_STR);
                 $modifCommentaire->execute();
 
-                // MESSAGE PERSONALISE A INTEGRER
-            }else{
-                $creationCommentaire = $pdo->prepare(" INSERT INTO commentaire (commentaire) VALUES (:commentaire)");
+            } else {
+
+                $creationCommentaire = $pdo->prepare(" INSERT INTO commentaire (id_commentaire, membre_id, annonce_id, commentaire,date_enregistrement) VALUES (:id_commentaire, :membre_id, :annonce_id, :commentaire, NOW()) ");
                 $creationCommentaire->bindValue(':commentaire', $_POST['commentaire'], PDO::PARAM_STR);
+                $creationCommentaire->bindValue(':id_commentaire', $_POST['id_commentaire'], PDO::PARAM_STR);
+                $creationCommentaire->bindValue(':membre_id', $_POST['membre_id'], PDO::PARAM_STR);
+                $creationCommentaire->bindValue(':annonce_id', $_POST['annonce_id'], PDO::PARAM_STR);
+                $creationCommentaire->bindValue(':commentaire', $_POST['commentaire'], PDO::PARAM_INT);
                 $creationCommentaire->execute();
             }
         }
     }
 
+    if ($_GET['action'] == 'update') {
+        $tousCommentaire = $pdo->query("SELECT * FROM commentaire WHERE commentaire = '$_GET[commentaire]' ");
+        $commentaireActuel = $tousCommentaire->fetch(PDO::FETCH_ASSOC);
+    }
+
+    $commentaire = (isset($commentaireActuel['commentaire'])) ? $commentaireActuel['commentaire'] : "";
+    
     // REQUETE - RECUPERATION EN BDD POUR UN UPDATE
     if ($_GET['action'] == 'update'){
         $tousCommentaire = $pdo->query("SELECT * FROM commentaire WHERE id_commentaire = '$_GET[id_commentaire]' ");
@@ -96,8 +114,7 @@ require_once('includeAdmin/header.php');
                 <?php foreach ($user as $key => $value) : ?>
                         <td><?= $value ?></td>
                 <?php endforeach; ?>
-                <td><a href='?action=update&id_commentaire=<?= $user['id_commentaire'] ?>'><i class="bi bi-pen-fill text-warning"></i></a></td>
-                <td><a data-href="?action=delete&iid_commentaire=<?= $user['id_commentaire'] ?>" data-toggle="modal" data-target="#confirm-delete"><i class="bi bi-trash-fill text-danger" style="font-size: 1.5rem;"></i></a></td>
+                <td><a data-href="?action=delete&id_commentaire=<?= $user['id_commentaire'] ?>" data-toggle="modal" data-target="#confirm-delete"><i class="bi bi-trash-fill text-danger" style="font-size: 1.5rem;"></i></a></td>
             </tr>
         <?php endwhile; ?>
     </tbody>

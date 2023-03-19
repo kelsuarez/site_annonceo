@@ -431,7 +431,7 @@ require_once('includeAdmin/header.php');
 
 <!-- TABLEAU DE RESCUPERATION DONNES -->
 <div class="col-12">
-    <table class="table table-white text-center">
+    <table class="table-responsive table-white text-center">
         <?php $afficheAnnonces = $pdo->query("SELECT * FROM annonce ORDER BY date_enregistrement DESC LIMIT $parPage OFFSET $premierAnnonce") ?>
         <thead>
             <tr>
