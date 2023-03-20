@@ -20,11 +20,16 @@
 
   <!-- {# links pour databaseTables #} -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css"/>
-  <style>
+
+
+  <link rel="stylesheet" type="text/css" href="../css/stat.css"/>
+
+
+  <!-- <style>
     .maxImg{
       max-height: 20em;
     }
-  </style>
+  </style> -->
 </head>
 
 <body>
@@ -34,6 +39,8 @@
     <div class="bg-info border-right" id="sidebar-wrapper">
       <div class="sidebar-heading text-dark text-center text-uppercase pt-5"><h3><strong>Annonceo Admin</strong></h3></div>
       <div class="list-group list-group-flush col-12 mx-auto">
+        <!-- GESTION DE ANNONCES -->
+        <a href="<?= URL ?>admin/statistiques.php" class="list-group-item list-group-item-action bg-info text-light py-5"><button type="button" class="btn btn-outline-light text-dark w-100"><strong>&nbspGestion &nbsp&nbspdes&nbsp&nbsp statistiques&nbsp</strong></button></a>
         <!-- GESTION DE ANNONCES -->
         <a href="<?= URL ?>admin/gestion_produit.php" class="list-group-item list-group-item-action bg-info text-light py-5"><button type="button" class="btn btn-outline-light text-dark w-100"><strong>&nbspGestion &nbsp&nbspdes&nbsp&nbsp annonces&nbsp</strong></button></a>
         <!-- GESTION DE MEMBRES -->

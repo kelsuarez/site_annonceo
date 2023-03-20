@@ -2,10 +2,10 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Hôte : 127.0.0.1:3306
--- Généré le : sam. 18 mars 2023 à 08:04
--- Version du serveur : 8.0.31
--- Version de PHP : 8.0.26
+-- Servidor: 127.0.0.1:3306
+-- Tiempo de generación: 20-03-2023 a las 18:48:41
+-- Versión del servidor: 8.0.31
+-- Versión de PHP: 8.0.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,26 +18,26 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `annoceo`
+-- Base de datos: `annoceo2`
 --
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `annonce`
+-- Estructura de tabla para la tabla `annonce`
 --
 
 DROP TABLE IF EXISTS `annonce`;
 CREATE TABLE IF NOT EXISTS `annonce` (
   `id_annonce` int NOT NULL AUTO_INCREMENT,
-  `titre` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `description_courte` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `description_longue` text COLLATE utf8mb4_general_ci NOT NULL,
+  `titre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description_courte` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description_longue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `prix` int NOT NULL,
-  `photo` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
-  `pays` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `ville` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `adresse` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `photo` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `pays` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `ville` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `adresse` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `cp` int NOT NULL,
   `membre_id` int DEFAULT NULL,
   `photo_id` int DEFAULT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `annonce` (
 ) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Déchargement des données de la table `annonce`
+-- Volcado de datos para la tabla `annonce`
 --
 
 INSERT INTO `annonce` (`id_annonce`, `titre`, `description_courte`, `description_longue`, `prix`, `photo`, `pays`, `ville`, `adresse`, `cp`, `membre_id`, `photo_id`, `categorie_id`, `date_enregistrement`) VALUES
@@ -67,19 +67,19 @@ INSERT INTO `annonce` (`id_annonce`, `titre`, `description_courte`, `description
 -- --------------------------------------------------------
 
 --
--- Structure de la table `categorie`
+-- Estructura de tabla para la tabla `categorie`
 --
 
 DROP TABLE IF EXISTS `categorie`;
 CREATE TABLE IF NOT EXISTS `categorie` (
   `id_categorie` int NOT NULL AUTO_INCREMENT,
-  `titre` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `motscles` text COLLATE utf8mb4_general_ci NOT NULL,
+  `titre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `motscles` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id_categorie`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Déchargement des données de la table `categorie`
+-- Volcado de datos para la tabla `categorie`
 --
 
 INSERT INTO `categorie` (`id_categorie`, `titre`, `motscles`) VALUES
@@ -97,37 +97,54 @@ INSERT INTO `categorie` (`id_categorie`, `titre`, `motscles`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `commentaire`
+-- Estructura de tabla para la tabla `commentaire`
 --
 
 DROP TABLE IF EXISTS `commentaire`;
 CREATE TABLE IF NOT EXISTS `commentaire` (
   `id_commentaire` int NOT NULL AUTO_INCREMENT,
-  `membre_id` int DEFAULT NULL,
-  `annonce_id` int DEFAULT NULL,
+  `membre_id` int NOT NULL,
+  `annonce_id` int NOT NULL,
   `commentaire` text COLLATE utf8mb4_general_ci NOT NULL,
   `date_enregistrement` datetime NOT NULL,
   PRIMARY KEY (`id_commentaire`),
-  UNIQUE KEY `membre_id` (`membre_id`),
-  UNIQUE KEY `annonce_id` (`annonce_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `membre_id` (`membre_id`),
+  KEY `annonce_id` (`annonce_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `commentaire`
+--
+
+INSERT INTO `commentaire` (`id_commentaire`, `membre_id`, `annonce_id`, `commentaire`, `date_enregistrement`) VALUES
+(9, 1, 81, 'Les maison sont incroyables', '2023-03-20 12:19:33'),
+(10, 1, 90, 'faux bijoux', '2023-03-20 12:20:34'),
+(11, 1, 89, 'Drapeaux basiques', '2023-03-20 12:21:07'),
+(12, 1, 84, 'Cadres de toutes tailles', '2023-03-20 12:21:36'),
+(13, 1, 83, 'Tv\'s vintages avec des coleurs incroyables', '2023-03-20 12:22:10'),
+(14, 1, 82, 'Faux', '2023-03-20 12:22:19'),
+(16, 1, 90, 'fsdgdsgds', '2023-03-20 17:37:14'),
+(17, 1, 90, 'Jai fail', '2023-03-20 17:37:36'),
+(18, 1, 90, 'sdfsdf', '2023-03-20 18:09:39'),
+(19, 1, 84, 'ça va', '2023-03-20 18:12:47'),
+(20, 1, 84, 'buu', '2023-03-20 18:13:16');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `membre`
+-- Estructura de tabla para la tabla `membre`
 --
 
 DROP TABLE IF EXISTS `membre`;
 CREATE TABLE IF NOT EXISTS `membre` (
   `id_membre` int NOT NULL AUTO_INCREMENT,
-  `pseudo` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `mdp` varchar(60) COLLATE utf8mb4_general_ci NOT NULL,
-  `nom` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `prenom` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `telephone` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `civilite` enum('homme','femme') COLLATE utf8mb4_general_ci NOT NULL,
+  `pseudo` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `mdp` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `nom` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `prenom` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `telephone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `civilite` enum('homme','femme') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `statut` int NOT NULL,
   `date_enregistrement` datetime NOT NULL,
   PRIMARY KEY (`id_membre`),
@@ -135,11 +152,11 @@ CREATE TABLE IF NOT EXISTS `membre` (
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Déchargement des données de la table `membre`
+-- Volcado de datos para la tabla `membre`
 --
 
 INSERT INTO `membre` (`id_membre`, `pseudo`, `mdp`, `nom`, `prenom`, `telephone`, `email`, `civilite`, `statut`, `date_enregistrement`) VALUES
-(1, 'keke_123', '$2y$10$rOkyjIl6qbD3cx7sqQRjMesAJ4Owh6RZlGExW5Q8XSypcXj43NQja', 'suarez', 'keke', '0715245123', 'keke@gmail.com', 'homme', 1, '2023-03-07 13:26:09'),
+(1, 'keke_123', '$2y$10$rOkyjIl6qbD3cx7sqQRjMesAJ4Owh6RZlGExW5Q8XSypcXj43NQja', 'suarez', 'keke', '0715245145', 'keke@gmail.com', 'homme', 1, '2023-03-07 13:26:09'),
 (3, 'meghan.stanley', '$2y$10$9eIeP/f7JOBADbcZRuaOXe/xPV2pYMB9jrA4Rh5ByzGDdnH.6sKAi', 'Stanley', 'Meghan', '0768514232', 'meghan.stanley@example.com', 'femme', 0, '2023-03-08 22:15:58'),
 (4, 'louella.rodriguez', '$2y$10$nOxS2LjJ1SjMV.ZQVcCNbev0BFtJ6gyoi7elCakCL0GtnNIWPAypW', 'Rodriguez', 'Rodriguez', '0752145265', 'louella.rodriguez@example.com', 'femme', 0, '2023-03-09 12:23:47'),
 (5, 'ArnaudLaramee', '$2y$10$.Wm5L7vcgmslCJd8CkBzTuqrQ7XvxOuqul60Odgkh9ABe7fNhuiw2', 'Laramée', 'Arnaud', '0621834080', 'ArnaudLaramee@jourrapide.com', 'homme', 0, '2023-03-13 09:28:44'),
@@ -148,46 +165,59 @@ INSERT INTO `membre` (`id_membre`, `pseudo`, `mdp`, `nom`, `prenom`, `telephone`
 (8, 'GermainPaquet', '$2y$10$dzUHb5IRan.uhi5nQZ0Ti.2mY8CZA7SZnTmvVmUbOYr5RFml3eQ7m', 'Paquet', 'Germain', '0758675215', 'GermainPaquet@rhyta.com', 'homme', 0, '2023-03-13 11:17:43'),
 (9, 'MorganaFecteau', '$2y$10$21r1kujdzhEufPbqQ5gnjOAXXgP3amZyyvNmfda2.Ww4Hb.SEmZRC', 'Fecteau', 'Morgana', '0654952366', 'MorganaFecteau@rhyta.com', 'femme', 0, '2023-03-13 12:04:09'),
 (10, 'perry.rodriquez', '$2y$10$pNv5noiDCnCywTi6mU/1UOfz0JanQPzXt71c9vNGCCVY6oeyJqEX6', 'Rodriquez', 'Perry', '0782546985', 'perry.rodriquez@example.com', 'homme', 0, '2023-03-17 14:01:29'),
-(13, 'marion.jacobs', '$2y$10$zvCf5phYGcwBeXwkZdU5ZuDJLqqrDqksW1GlWRFd0nbBxbe42IhIe', 'Jacbos', 'Marion', '0754854550', 'marion.jacobs@example.com', 'homme', 0, '2023-03-17 19:41:46');
+(13, 'marion.jacobs', '$2y$10$zvCf5phYGcwBeXwkZdU5ZuDJLqqrDqksW1GlWRFd0nbBxbe42IhIe', 'Jacbos', 'Marion', '0754854570', 'marion.jacobs@example.com', 'homme', 0, '2023-03-17 19:41:46');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `note`
+-- Estructura de tabla para la tabla `note`
 --
 
 DROP TABLE IF EXISTS `note`;
 CREATE TABLE IF NOT EXISTS `note` (
   `id_note` int NOT NULL AUTO_INCREMENT,
-  `membre_id1` int DEFAULT NULL,
+  `membre_id1` int NOT NULL,
   `membre_id2` int DEFAULT NULL,
-  `note` int NOT NULL,
-  `avis` int NOT NULL,
+  `note` enum('1','2','3','4','5') COLLATE utf8mb4_general_ci NOT NULL,
   `date_enregistrement` datetime NOT NULL,
   PRIMARY KEY (`id_note`),
-  UNIQUE KEY `membre_id1` (`membre_id1`),
-  UNIQUE KEY `membre_id2` (`membre_id2`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `membre_id1` (`membre_id1`),
+  KEY `membre_id2` (`membre_id2`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `note`
+--
+
+INSERT INTO `note` (`id_note`, `membre_id1`, `membre_id2`, `note`, `date_enregistrement`) VALUES
+(1, 1, 8, '5', '2023-03-20 09:51:56'),
+(2, 8, 1, '4', '2023-03-20 16:42:43'),
+(3, 1, NULL, '3', '2023-03-20 18:03:58'),
+(4, 1, NULL, '3', '2023-03-20 18:05:54'),
+(5, 1, 13, '3', '2023-03-20 18:07:19'),
+(6, 1, 13, '3', '2023-03-20 18:09:39'),
+(7, 1, 8, '4', '2023-03-20 18:12:47'),
+(8, 1, 8, '1', '2023-03-20 18:13:16');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `photo`
+-- Estructura de tabla para la tabla `photo`
 --
 
 DROP TABLE IF EXISTS `photo`;
 CREATE TABLE IF NOT EXISTS `photo` (
   `id_photo` int NOT NULL AUTO_INCREMENT,
-  `photo1` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `photo2` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `photo3` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `photo4` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `photo5` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `photo1` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `photo2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `photo3` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `photo4` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `photo5` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id_photo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Déchargement des données de la table `photo`
+-- Volcado de datos para la tabla `photo`
 --
 
 INSERT INTO `photo` (`id_photo`, `photo1`, `photo2`, `photo3`, `photo4`, `photo5`) VALUES
@@ -231,11 +261,11 @@ INSERT INTO `photo` (`id_photo`, `photo1`, `photo2`, `photo3`, `photo4`, `photo5
 (70, '641566484901c_pexels-lumn-4155254.jpg', '64156648492d4_pexels-lumn-4155250.jpg', '641566484959a_pexels-lumn-4155249.jpg', '6415664849880_pexels-lumn-4155247.jpg', '6415664849b73_pexels-lumn-4155248.jpg');
 
 --
--- Contraintes pour les tables déchargées
+-- Restricciones para tablas volcadas
 --
 
 --
--- Contraintes pour la table `annonce`
+-- Filtros para la tabla `annonce`
 --
 ALTER TABLE `annonce`
   ADD CONSTRAINT `annonce_ibfk_1` FOREIGN KEY (`categorie_id`) REFERENCES `categorie` (`id_categorie`) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -243,10 +273,18 @@ ALTER TABLE `annonce`
   ADD CONSTRAINT `annonce_ibfk_3` FOREIGN KEY (`membre_id`) REFERENCES `membre` (`id_membre`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Contraintes pour la table `commentaire`
+-- Filtros para la tabla `commentaire`
 --
 ALTER TABLE `commentaire`
-  ADD CONSTRAINT `commentaire_ibfk_1` FOREIGN KEY (`membre_id`) REFERENCES `membre` (`id_membre`) ON DELETE SET NULL ON UPDATE SET NULL;
+  ADD CONSTRAINT `commentaire_ibfk_1` FOREIGN KEY (`annonce_id`) REFERENCES `annonce` (`id_annonce`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `commentaire_ibfk_2` FOREIGN KEY (`membre_id`) REFERENCES `membre` (`id_membre`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `note`
+--
+ALTER TABLE `note`
+  ADD CONSTRAINT `note_ibfk_1` FOREIGN KEY (`membre_id2`) REFERENCES `membre` (`id_membre`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `note_ibfk_2` FOREIGN KEY (`membre_id1`) REFERENCES `membre` (`id_membre`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

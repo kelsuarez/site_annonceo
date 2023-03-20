@@ -71,11 +71,11 @@ if(isset($_GET['action'])){
             $erreur .= '<div class="alert alert-danger" role="alert">Erreur format titre !</div>';
         }
         // DESCRIPTION COURTE
-            if(!isset($_POST['description_courte']) || iconv_strlen($_POST['description_courte']) <1 || iconv_strlen($_POST['pays']) > 200 ){
+            if(!isset($_POST['description_courte']) || iconv_strlen($_POST['description_courte']) <1 || iconv_strlen($_POST['description_courte']) > 200 ){
             $erreur .= '<div class="alert alert-danger" role="alert">Erreur format description courte !</div>';
         }
         // DESCRIPTION LONGUE
-        if(!isset($_POST['description_longue']) || iconv_strlen($_POST['description_longue']) <1 || iconv_strlen($_POST['pays']) > 500 ){
+        if(!isset($_POST['description_longue']) || iconv_strlen($_POST['description_longue']) <1 || iconv_strlen($_POST['description_longue']) > 500 ){
             $erreur .= '<div class="alert alert-danger" role="alert">Erreur format description longue !</div>';
         }
         // PRIX
@@ -213,6 +213,7 @@ if(isset($_GET['action'])){
                             </div>';
             }else{
 
+                // REQUETTE DE INSERTION A LA BDD PHOTO
                 $incluirePhoto = $pdo->prepare("INSERT INTO photo (photo1, photo2, photo3, photo4, photo5) VALUES (:photo1, :photo2, :photo3, :photo4, :photo5)");
 
                 $incluirePhoto->bindParam(':photo1', $photoBdd1);
@@ -224,7 +225,7 @@ if(isset($_GET['action'])){
 
                 $photo_id = $pdo->lastInsertId();
 
-                // REQUETTE DE INSERTION A LA BDD
+                // REQUETTE DE INSERTION A LA BDD ANNONCE
                 $incluireAnnonce = $pdo->prepare("INSERT INTO annonce (titre, description_courte, description_longue, prix, photo, pays, ville, adresse, cp, membre_id, categorie_id, date_enregistrement, photo_id) VALUES (:titre, :description_courte, :description_longue, :prix, :photo, :pays, :ville, :adresse, :cp, :membre_id, :categorie_id, NOW(), :photo_id)");
 
                 $incluireAnnonce->bindParam(':titre', $_POST['titre']);

@@ -30,6 +30,41 @@ if(!empty($_GET['id_annonce'])) {
 }
 
 // $recup_commentaire = $pdo->query("SELECT * FROM commentaire");
+$id_membre = $_SESSION['membre']['id_membre'];
+$id_annonce = $infos_annonce['id_annonce'];
+$membre_id2 = $infos_annonce['membre_id'];
+
+    if ($_POST){
+        // COMMENTAIRE
+        if(!isset($_POST['commentaire']) || iconv_strlen($_POST['commentaire']) <1 || iconv_strlen($_POST['commentaire']) > 500 ){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format commentaire !</div>';
+        }
+        // RANKING
+        if(!isset($_POST['note']) || $_POST['note'] != '1' && $_POST['note'] != '2' && $_POST['note'] != '3' && $_POST['note'] != '4' && $_POST['note'] != '5'){
+            $erreur .= '<div class="alert alert-danger" role="alert">Erreur format note !</div>';
+        }
+
+        if(empty($erreur)){
+            // if($_GET['action'] == 'envoyer'){
+                $laisserCommentaire = $pdo->prepare("INSERT INTO commentaire (membre_id, annonce_id, commentaire, date_enregistrement) VALUES (:membre_id, :annonce_id, :commentaire, NOW())");
+
+                $laisserCommentaire->bindParam(':membre_id', $id_membre);
+                $laisserCommentaire->bindParam(':annonce_id', $id_annonce);
+                $laisserCommentaire->bindParam(':commentaire', $_POST['commentaire']);
+                $laisserCommentaire->execute();
+
+                $laisserNote = $pdo->prepare("INSERT INTO note (membre_id1, membre_id2, note, date_enregistrement) VALUES (:membre_id1, :membre_id2, :note, NOW())");
+
+                $laisserNote->bindParam(':membre_id1', $id_membre);
+                $laisserNote->bindParam(':membre_id2', $membre_id2);
+                $laisserNote->bindParam(':note', $_POST['note']);
+                // $laisserNote->bindParam(':avis', $_POST['avis']);
+                $laisserNote->execute();
+            // }else{
+
+            // }
+        }
+    }
 
 // REQUETE RECUP COMMENTAIRE
 $id_annonce = $_GET['id_annonce'];
@@ -38,12 +73,27 @@ $req_commentaires->execute(array('id_annonce' => $id_annonce));
 $commentaires = $req_commentaires->fetchAll(PDO::FETCH_OBJ);
 
 
+
+$commentaire = "";
+
+
+
+
+
+
+
+
+
+
 require_once('include/affichage.php');
 require_once('include/header.php');
 ?>
 
 </div>
 
+<?= $erreur?>
+
+<!-- FICHE ANNONCES -->
 <div class="col-11 mx-auto mt-5">
     <div class="d-flex">
         <div class="col-6">
@@ -95,25 +145,58 @@ require_once('include/header.php');
 
 </div>
 
+<!-- FORMULAIRE DE COMMENTAIRE + NOTE -->
 <div class="col-md-5 mx-auto mt-5">
     <h3 class="text-center">Laisser un commentaire</h3>
 
-    <div class="row">
-        <form action="submit_comment.php" method="post">
-            <label for="name">Nom :</label>
-            <input type="text" id="name" name="name" required>
+    <div class="">
+        <form action="" method="post">
 
-            <label for="email">Email :</label>
-            <input type="email" id="email" name="email" required>
+            <input type="hidden" id="<?= $id_membre?>" name="id_membre" value="<?= $id_membre ?>">
+            <input type="hidden" id="<?= $id_annonce?>" name="id_annonce" value="<?= $id_annonce ?>">
 
-            <label for="comment">Commentaire :</label>
-            <textarea id="comment" name="comment" rows="4" required></textarea>
+            <div class="col-2 mx-auto mt-5">
+                <label for="pseudo">Pseudo : <?= $_SESSION['membre']['pseudo'] ?></label>
+            </div>
 
-            <input type="submit" value="Envoyer">
+            <div class="col-2 mx-auto mt-5">
+                <label for="commentaire">Commentaire :</label>
+                <textarea id="commentaire" name="commentaire" rows="4" required value="commentaire"></textarea>
+            </div>
+
+            <div class="col-md-4 mt-5 pt-2">
+            <p><div class="badge badge-dark text-wrap">NOTE</div></p> 
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="note" id="note1" value="1">
+                <label class="form-check-label mx-2" for="note1">1</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="note" id="note2" value="2" checked>
+                <label class="form-check-label mx-2" for="note2">2</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="note" id="note3" value="3" checked>
+                <label class="form-check-label mx-2" for="note3">3</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="note" id="note4" value="4" checked>
+                <label class="form-check-label mx-2" for="note4">4</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="note" id="note5" value="5" checked>
+                <label class="form-check-label mx-2" for="note5">5</label>
+            </div>
+        </div>
+
+
+
+
+            <input class="col-2 mx-auto mt-5" type="submit" value="envoyer">
         </form>
     </div>
 </div>
 
+<!-- AFFICHAGE DE COMMENTAIRES -->
 <div class="col-md-5 mx-auto mt-5">
     <h3 class="text-center mb-5">Commentaires</h3>
     <?php foreach ($commentaires as $commentaire) : ?>
@@ -124,22 +207,6 @@ require_once('include/header.php');
         </div>
     <?php endforeach; ?>
 </div>
-
-
-    <?php  echo debug($commentaires); ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- MODAL DE SUP/MDF-->
 <div class="modal fade" id="contact-user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
