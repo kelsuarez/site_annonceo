@@ -85,16 +85,12 @@ require_once('includeAdmin/header.php');
 <?= $content ?>
 
 <!-- TITLE GESTION -->
-<h1 class="text-center my-5">
-    <div class="badge badge-success text-wrap p-3">Gestion de commentaires</div>
-</h1>
+<h1 class="text-center display-4 my-5 text-wrap p-3">Gestion de commentaires</h1>
 
 <!-- NOMBRE DE CATEGORIES EN BDD -->
 <?php $nombreCommentaires = $pdo->query("SELECT id_commentaire FROM commentaire"); ?>
 <h2 class="py-5 text-center">Commentaires en base de données:</h2>
-<h3 class="text-center display-3">
-    <div class="badge badge-success p-3"><?= $nombreCommentaires->rowCount() ?></div>
-</h3>
+<h3 class="text-center display-2 mb-5 p-3"><?= $nombreCommentaires->rowCount() ?></h3>
 
 <!-- TABLEAU DE RESCUPERATION DONNES -->
 <table class="table table-white text-center rounded-1">

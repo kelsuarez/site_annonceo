@@ -7,6 +7,9 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
+  <!-- FAVICON -->
+  <link rel="icon" type="image/png" href="logo_100_black.png" />
+
   <title>Annonceo Admin</title>
 
   <!-- Bootstrap core CSS -->
@@ -42,7 +45,7 @@
         <!-- GESTION DE ANNONCES -->
         <a href="<?= URL ?>admin/statistiques.php" class="list-group-item list-group-item-action bg-info text-light py-5"><button type="button" class="btn btn-outline-light text-dark w-100"><strong>&nbspGestion &nbsp&nbspdes&nbsp&nbsp statistiques&nbsp</strong></button></a>
         <!-- GESTION DE ANNONCES -->
-        <a href="<?= URL ?>admin/gestion_produit.php" class="list-group-item list-group-item-action bg-info text-light py-5"><button type="button" class="btn btn-outline-light text-dark w-100"><strong>&nbspGestion &nbsp&nbspdes&nbsp&nbsp annonces&nbsp</strong></button></a>
+        <a href="<?= URL ?>admin/gestion_annonces.php" class="list-group-item list-group-item-action bg-info text-light py-5"><button type="button" class="btn btn-outline-light text-dark w-100"><strong>&nbspGestion &nbsp&nbspdes&nbsp&nbsp annonces&nbsp</strong></button></a>
         <!-- GESTION DE MEMBRES -->
         <a href="<?= URL ?>admin/gestion_membre.php" class="list-group-item list-group-item-action bg-info text-light py-5"><button type="button" class="btn btn-outline-light text-dark w-100"><strong>&nbspGestion &nbspdes&nbsp membres&nbsp</strong></button></a>
         <!-- GESTION DE CATEGORIES -->
@@ -69,7 +72,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
       <li class="nav-item">
-        <a class="nav-link" href="<?= URL ?>index.php"><button type="button" class="btn btn-outline-light text-dark"><strong>Home Boutique</strong></button></a>
+        <a class="nav-link" href="<?= URL ?>index.php"><button type="button" class="btn btn-outline-light text-dark"><strong>Home Annonceo</strong></button></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="<?= URL ?>admin/index.php"><button type="button" class="btn btn-outline-light text-dark"><strong>Home Admin</strong></button></a>
@@ -79,11 +82,12 @@
         <button type="button" class="btn btn-outline-light text-dark"><strong>Menu Admin</strong></button>
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="<?= URL ?>admin/statistiques.php"><strong>Gestion des statistiques</strong></a>
+          <a class="dropdown-item" href="<?= URL ?>admin/gestion_annonces.php"><strong>Gestion des annonces</strong></a>
           <a class="dropdown-item" href="<?= URL ?>admin/gestion_membre.php"><strong>Gestion des membres</strong></a>
-          <a class="dropdown-item" href="<?= URL ?>admin/gestion_produit.php"><strong>Gestion des produits</strong></a>
-          <a class="dropdown-item" href="<?= URL ?>admin/gestion_categories.php"><strong>Gestion des catégories</strong></a>
-          <a class="dropdown-item" href="<?= URL ?>admin/gestion_commande.php"><strong>Gestion des commandes</strong></a>
-          <a class="dropdown-item" href="<?= URL ?>admin/gestion_detail_commande.php"><strong>Détail des commandes</strong></a>
+          <a class="dropdown-item" href="<?= URL ?>admin/gestion_categories.php"><strong>Gestion des categories</strong></a>
+          <a class="dropdown-item" href="<?= URL ?>admin/gestion_commentaires.php"><strong>Gestion des commentaires</strong></a>
+          <a class="dropdown-item" href="<?= URL ?>admin/gestion_notes.php"><strong>Gestion des notes</strong></a>
         </div>
       </li>
     </ul>

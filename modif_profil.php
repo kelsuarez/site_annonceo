@@ -26,24 +26,6 @@ if (isset($_GET['action'])) {
 
     if ($_POST) {
 
-        // PSEUDO
-        // if (!isset($_POST['pseudo']) || !preg_match('#^[a-zA-Z0-9-_.]{3,20}$#', $_POST['pseudo'])) {
-        //     $erreur .= '<div class="alert alert-danger" role="alert">Erreur format pseudo !</div>';
-        // }
-
-        // if ($_GET['action'] == 'add') {
-        //     $verifPseudo = $pdo->prepare("SELECT pseudo FROM membre WHERE pseudo = :pseudo ");
-        //     $verifPseudo->bindValue(':pseudo', $_POST['pseudo'], PDO::PARAM_STR);
-        //     $verifPseudo->execute();
-        //     if ($verifPseudo->rowCount() == 1) {
-        //         $erreur .= '<div class="alert alert-danger" role="alert">Erreur, ce pseudo existe déjà, vous devez en choisir un autre !</div>';
-        //     }
-            // MOT DE PASSE
-        //     if (!isset($_POST['mdp']) || strlen($_POST['mdp']) < 3 || strlen($_POST['mdp']) > 20) {
-        //         $erreur .= '<div class="alert alert-danger" role="alert">Erreur format mdp !</div>';
-        //     }
-        //     $_POST['mdp'] = password_hash($_POST['mdp'], PASSWORD_DEFAULT);
-        // }
         // NOM
         if (!isset($_POST['nom']) || iconv_strlen($_POST['nom']) < 3 || iconv_strlen($_POST['nom']) > 20) {
             $erreur .= '<div class="alert alert-danger" role="alert">Erreur format nom !</div>';
@@ -122,13 +104,11 @@ if (isset($_GET['action'])) {
 require_once('include/header.php');
 ?>
 
-<!-- MODIFICATION DE PROFIL -->
-<?php// if (isset($_GET['action']) && $_GET['action'] == 'profil') : ?>
-
 <?= $erreur ?>
 <?= $success ?>
 
 <?php if (isset($_GET['action']) && $_GET['action'] == 'profil') : ?>
+
         <div class="col-md-8 mx-auto">
 
             <form class="my-5" method="POST" action="">
@@ -136,22 +116,6 @@ require_once('include/header.php');
             <input type="hidden" name="id_membre" value="<?= $id_membre ?>">
 
             <div class="row">
-
-                <!-- PSEUDO -->
-                <!-- <div class="col-md-3 mt-5 mx-auto">
-                    <label class="form-label" for="pseudo">
-                        <div class="badge badge-dark text-wrap">Pseudo</div>
-                    </label>
-                    <input class="form-control" type="text" name="pseudo" id="pseudo" placeholder="Pseudo" max-length="20" pattern="[a-zA-Z0-9-_.]{3,20}" title="caractères acceptés: majuscules et minuscules, chiffres, signes tels que: - _ . entre trois et vingt caractères." required value="<?php //echo $pseudo ?>">
-                </div> -->
-
-                <!-- MOT DE PASSE -->
-                <!-- <div class="col-md-3 mt-5">
-                    <label class="form-label" for="mdp">
-                        <div class="badge badge-dark text-wrap">Mot de passe</div>
-                    </label>
-                    <input class="form-control" type="password" name="mdp" id="mdp" placeholder="Mot de passe" max-length="20" required value="<?php //echo $mdp ?>">
-                </div> -->
                 
                 <!-- EMAIL -->
                 <div class="col-md-3 mt-5 mx-auto">
@@ -205,30 +169,11 @@ require_once('include/header.php');
 
             <!-- VALIDATION -->
             <div class="col-md-3 mt-5 mx-auto">
-                <button type="submit" class="btn btn-outline-dark btn-success w-100 text-white">Valider</button>
+                <button type="submit" class="btn btn-dark w-100 text-white">Valider</button>
             </div>
 
             </form>
         </div>
 <?php endif; ?>
-
-
-
-
-
-<!-- MODAL DE SUP/MDF-->
-<!-- <a href="?action=validationModif" data-toggle="modal" data-target="#validationModif"></a> -->
-<!-- <div class="modal fade" id="validationModif" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                Félicitations <?= $prenom ?>! La modification de votre profil a bien été pris en compte!
-            </div>
-            <div class="modal-footer">
-                <a href="profil.php?action=validationModif" class="btn btn-success btn-ok">VALIDER</a>
-            </div>
-        </div>
-    </div>
-</div> -->
 
 <?php require_once('include/footer.php') ?>

@@ -1,32 +1,66 @@
 <?php
-// affichage des catégories dans la navigation latérale
+
+// SELECT CATEGORIE
 $afficheMenuCategories = $pdo->query(" SELECT DISTINCT titre FROM categorie ORDER BY titre ASC ");
-// fin de navigation laterale catégories
 
-// tout l'affichage par categorie
+// CATEGORIE
 if(isset($_GET['categorie'])){
-    // pagination pour les categories
-    
-    // fin pagination pour les categories
 
-    // affichage de tous les produits concernés par une categorie
-    $fiche_annonce = $pdo->query(" SELECT annonce.*, categorie.titre AS titre_categorie FROM annonce, categorie WHERE categorie.titre = '$_GET[categorie]'");
-    // fin affichage des produits par categorie
+    // AFFICHAGE
+    $sql = "SELECT annonce.*, categorie.titre AS titre_categorie FROM annonce INNER JOIN categorie ON annonce.categorie_id = categorie.id_categorie WHERE categorie.titre = ?";
+    $stmt = $pdo->prepare($sql);
+    $categorie = $_GET['categorie'];
+    $stmt->execute([$categorie]);
 
-    // affichage de la categorie dans le <h2>
+    // TITRE
     $afficheTitreCategorie = $pdo->query(" SELECT titre FROM categorie WHERE titre = '$_GET[categorie]' ");
     $titreCategorie = $afficheTitreCategorie->fetch(PDO::FETCH_ASSOC);
-    // fin du h2 categorie
 
     // pour les onglets categories
-    $pageTitle = "Nos modèles de " . $_GET['categorie'];
+    // $pageTitle = "Nos modèles de " . $_GET['categorie'];
     // fin onglets categories
 }
-// fin affichage par categorie
 
-// -----------------------------------------------------------------------------------
+// SELECT PRIX
+$afficheMenuPrix = $pdo->query(" SELECT DISTINCT prix FROM annonce ORDER BY prix ASC ");
 
-// tout l'affichage par public
+// PRIX
+if(isset($_GET['prix'])){
+
+    // AFFICHAGE
+    $affichePrix = $pdo->query(" SELECT * FROM annonce WHERE prix = '$_GET[prix]' ORDER BY prix ASC ");
+
+    // TITRE
+    $afficheTitrePrix = $pdo->query(" SELECT prix FROM annonce WHERE prix = '$_GET[prix]' ");
+    $titrePrix = $afficheTitrePrix->fetch(PDO::FETCH_ASSOC);
+
+    // pour les onglets categories
+    // $pageTitle = "Nos modèles de " . $_GET['categorie'];
+    // fin onglets categories
+}
+
+// SELECT VILLE
+$afficheMenuVille = $pdo->query(" SELECT DISTINCT ville FROM annonce ORDER BY ville ASC ");
+
+// VILLE
+if(isset($_GET['ville'])){
+
+    // AFFICHAGE
+    $afficheVille = $pdo->query(" SELECT * FROM annonce WHERE ville = '$_GET[ville]' ORDER BY ville ASC ");
+
+    // TITRE
+    $afficheTitreVille = $pdo->query(" SELECT ville FROM annonce WHERE ville = '$_GET[ville]' ");
+    $titreVille = $afficheTitreVille->fetch(PDO::FETCH_ASSOC);
+
+    // pour les onglets categories
+    // $pageTitle = "Nos modèles de " . $_GET['categorie'];
+    // fin onglets categories
+}
+
+// DERNIERS ANNONCES
+// AFFICHAGE
+$afficheDerniers = $pdo->query(" SELECT * FROM annonce ORDER BY date_enregistrement DESC ");
+
 // if(isset($_GET['public'])){
     // pagination produits par public
     

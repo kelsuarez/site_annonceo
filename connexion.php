@@ -3,11 +3,6 @@ require_once('include/init.php');
 
 $pageTitle = "Connexion";
 
-// script pour se déconnecter
-// on vérifie que dans l'URL a transiter une action  = deconnexion
-// dans ce cas on fait un unet (avec le nom de la session pour la cibler)
-// on ne fait pas de session_destroy car elle est trop radicale
-// elle ne va  pas seulement detruire la session que l'on cible, mais toutes les sessions ouvertes (exemple, la session panier aussi). Donc trop radicale, on fait juste unset
 if(isset($_GET['action'])  && $_GET['action'] == 'deconnexion'){
     unset($_SESSION['membre']);
     header('location:' . URL . 'connexion.php');
@@ -18,15 +13,6 @@ if(internauteConnecte()){
     header('location:' . URL . 'profil.php');
     exit();
 }
-
-// if(isset($_GET['action']) && $_GET['action'] == 'validate' ){
-// $validate .= '<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
-//                     <strong>Félicitations !</strong> Votre inscription est réussie 😉, vous pouvez vous connecter !
-//                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-//                         <span aria-hidden="true">&times;</span>
-//                     </button>
-//                 </div>';
-// }
 
 if($_POST){
 
@@ -62,8 +48,8 @@ if($_POST){
 require_once('include/header.php');
 ?>
 
-    <!-- TITLE CONNEXINO -->
-    <h2 class="text-center py-5"><div class="badge badge-info text-dark text-wrap p-3"><strong>CONNEXION</strong></div></h2>
+    <!-- TITLE CONNEXION -->
+    <h2 class="text-center display-4 my-5 text-wrap p-3">CONNEXION</h2>
 
     <!-- MESSAGE DE VALIDATION -->
     <?= $validate ?>
@@ -71,13 +57,13 @@ require_once('include/header.php');
     <!-- FORMULAIRE DE CONNEXION -->
     <form class="my-5" method="POST" action="">
         <div class="col-md-4 offset-md-4 my-4">
-            <label class="form-label" for="pseudo"><div class="badge badge-dark text-wrap">Pseudo</div></label>
-            <input class="form-control btn btn-outline-success mb-4" type="text" name="pseudo" id="pseudo" placeholder="Votre pseudo">
+            <label class="form-label" for="pseudo">Pseudo</label>
+            <input class="form-control btn btn-outline-dark mb-4" type="text" name="pseudo" id="pseudo" placeholder="Votre pseudo">
 
-            <label class="form-label" for="mdp"><div class="badge badge-dark text-wrap">Mot de passe</div></label>
-            <input class="form-control btn btn-outline-success mb-4" type="password" name="mdp" id="mdp" placeholder="Votre mot de passe">
+            <label class="form-label" for="mdp">Mot de passe</label>
+            <input class="form-control btn btn-outline-dark mb-4" type="password" name="mdp" id="mdp" placeholder="Votre mot de passe">
 
-            <button type="submit" class="btn btn-lg btn-outline-dark text-success offset-md-4 my-2">Connexion</button>
+            <button type="submit" class="text-center mx-auto col-10 col-lg-12 mx-auto btn btn-lg btn-outline-dark">Connexion</button>
         </div>
     </form>
 

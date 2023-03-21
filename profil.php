@@ -60,7 +60,6 @@ $photoBdd3 = "";
 $photoBdd4 = "";
 $photoBdd5 = "";
 
-// if(isset($_GET['action']) && !empty($_POST)){
 
 if(isset($_GET['action'])){
 
@@ -286,40 +285,40 @@ require_once('include/header.php');
     <?= $validate ?>
 
     <!-- INFORMATION PROFIL -->
-    <div class="col-11 col-lg-4 text-center mx-auto">
+    <div class="col-11 col-lg-3 text-center mx-auto">
         <ul class="list-group">
             <!-- PRENOM -->
                 <div class="list-group">
                     <h3>Votre Prenom</h3>
-                    <li class="btn btn-outline-success text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['prenom'] ?></li>
+                    <li class="btn btn-outline-dark text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['prenom'] ?></li>
                 </div>
             <!-- NOM -->
                 <div class="list-group">
                     <h3>Votre Nom</h3>
-                    <li class="btn btn-outline-success text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['nom'] ?></li>
+                    <li class="btn btn-outline-dark text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['nom'] ?></li>
                 </div>
             <!-- PESUDO -->
                 <div class="list-group">
                     <h3>Votre Pseudo</h3>
-                    <li class="btn btn-outline-success text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['pseudo'] ?></li>
+                    <li class="btn btn-outline-dark text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['pseudo'] ?></li>
                 </div>
             <!-- MAIL -->
                 <div class="list-group">
                     <h3>Votre Email</h3>
-                    <li class="btn btn-outline-success text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['email'] ?></li>
+                    <li class="btn btn-outline-dark text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['email'] ?></li>
                 </div>
             <!-- TELEPHONE -->
                 <div class="list-group">
                     <h3>Votre Téléphone</h3>
-                    <li class="btn btn-outline-success text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['telephone'] ?></li>
+                    <li class="btn btn-outline-dark text-dark my-3 shadow bg-white rounded"><?= $_SESSION['membre']['telephone'] ?></li>
                 </div>
         </ul>
     </div>
 
     <!-- BUTTON VOIR PROFIL -->
-    <div class="col-3 mx-auto py-2 justify-content-center mb-5">
+    <div class="col-11 col-lg-3 mx-auto py-2 justify-content-center mb-5">
         <a href='modif_profil.php?action=profil&id_membre=<?= $id_membre = $_SESSION['membre']['id_membre']?>'>
-            <button type="button" class="w-100 py-3 btn btn-sm btn-outline-success shadow rounded">
+            <button type="button" class="w-100 py-3 btn btn-sm btn-outline-dark shadow rounded">
                 <i class="bi bi-eye mr-1"></i>
                     Modifier mes informations
             </button>
@@ -334,7 +333,7 @@ require_once('include/header.php');
         <!-- BUTTON VOIR ANNONCE -->
         <div class="col mx-auto py-2 justify-content-center">
             <a href='?action=see'>
-                <button type="button" class="w-100 py-3 btn btn-sm btn-outline-success shadow rounded">
+                <button type="button" class="w-100 py-3 btn btn-sm btn-outline-dark shadow rounded">
                     <i class="bi bi-eye mr-1"></i>
                     Voir mes annonces
                 </button>
@@ -344,7 +343,7 @@ require_once('include/header.php');
         <!-- BUTTON AJOUT ANNONCE -->
         <div class="col mx-auto py-2 justify-content-center">
             <a href='?action=add'>
-                <button type="button" class="w-100 py-3 btn btn-sm btn-outline-success shadow rounded">
+                <button type="button" class="w-100 py-3 btn btn-sm btn-outline-dark shadow rounded">
                     <i class="bi bi-plus-circle-fill"></i> 
                     Ajouter un annonce
                 </button>
@@ -394,7 +393,7 @@ require_once('include/header.php');
     <?php if (isset($_GET['action']) && $_GET['action'] == 'add') : ?>
         <h2 class="pt-5 text-center">Formulaire d'une annonce</h2>
 
-        <form id="monForm" class="my-5 col-12 mx-auto" method="POST" action=""  enctype="multipart/form-data">
+        <form id="monForm" class="my-5 col-11 mx-auto" method="POST" action=""  enctype="multipart/form-data">
 
             <!-- INPUT HIDDEN -->
             <input type="hidden" name="id_annonce" value="<?= $id_annonce ?>">
@@ -475,7 +474,7 @@ require_once('include/header.php');
                 </div>
             </div>
             <div>
-                <div class="col-md-12 mt-4 mx-auto">
+                <div class="col-md-10 mt-5 mx-auto">
                     <div class="d-lg-flex mx-auto">
                         <div>
                             <label for="photo1">Photo 1:</label>
@@ -489,6 +488,8 @@ require_once('include/header.php');
                             <label for="photo3">Photo 3:</label>
                             <input type="file" name="photo3" id="photo3"><br>
                         </div>
+                    </div>
+                    <div class="d-lg-flex mx-auto mt-5">
                         <div>
                             <label for="photo4">Photo 4:</label>
                             <input type="file" name="photo4" id="photo4"><br>
@@ -503,28 +504,23 @@ require_once('include/header.php');
             <!-- BUTTON VALIDER -->
             <div class="col-md-6 mx-auto mt-5">
                 <a href="?action=ajoutfait">
-                    <button type="submit" class="btn btn-outline-dark btn-success w-100">Valider</button>
+                    <button type="submit" class="btn btn-dark w-100">Valider</button>
                 </a>
             </div>
-            <?= debug($erreur) ?>
         </form>
     <?php endif; ?>
 
-
-    <!-- && $_GET['action'] == 'add' -->
-    <!-- $_GET['action'] == 'update' -->
-    
     <!-- FORMULAIRE -->
     <?php if(isset($_GET['action']) && $_GET['action'] == 'update'): ?>
 
-    <h2 class="my-5 text-center"><u>Formulaire de modification des annonces</u></h2>
+        <h2 class="my-5 text-center"><u>Formulaire de modification des annonces</u></h2>
 
-    <form id="monForm" class="my-5 col-12 mx-auto" method="POST" action="" enctype="multipart/form-data">
+        <form id="monForm" class="my-5 col-11 mx-auto" method="POST" action="" enctype="multipart/form-data">
 
-        <input type="hidden" name="id_annonce" value="<?= $id_annonce  ?>">
-        <input type="hidden" name="membre_id" value="<?= $id_membre?>">
-        <input type="hidden" name="photo_id" value="<?= $photo_id?>">
-        <input type="hidden" name="categorie_id" value="<?= $categorie_id  ?>">
+            <input type="hidden" name="id_annonce" value="<?= $id_annonce  ?>">
+            <input type="hidden" name="membre_id" value="<?= $id_membre?>">
+            <input type="hidden" name="photo_id" value="<?= $photo_id?>">
+            <input type="hidden" name="categorie_id" value="<?= $categorie_id  ?>">
 
         <div class="d-flex mx-auto mt-5">
             <!-- TITRE -->
@@ -614,7 +610,6 @@ require_once('include/header.php');
                     <option value="" selected hidden>Choisir une catégories</option>
                     <?php while ($categorie = $mesCategories->fetch(PDO::FETCH_ASSOC)) : ?>
                         <option value="<?= $categorie['id_categorie']?>"><?= $categorie['titre'] . " | ". $categorie['motscles'] ?></option>
-                        <?php //$categorie_id = $categorie['id_categorie'];?>
                     <?php endwhile; ?>
                 </select>
             </div>
@@ -622,7 +617,7 @@ require_once('include/header.php');
 
         <!-- VALIDATION -->
         <div class="col-md-3 mt-5 mx-auto">
-            <button type="submit" class="btn btn-outline-dark btn-success w-100 text-white">Valider</button>
+            <button type="submit" class="btn btn-dark w-100 text-white">Valider</button>
         </div>
 
     </form>

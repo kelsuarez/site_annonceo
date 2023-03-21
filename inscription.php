@@ -83,71 +83,73 @@ require_once('include/header.php');
 ?>
 
 
-    <h2 class="text-center py-5 col-3 mx-auto">
-        <div class="badge badge-info text-wrap p-3 w-100">Inscription</div>
-    </h2>
+    <h2 class="text-center display-4 my-5 text-wrap p-3">INSCRIPTION</h2>
 
-<?= $erreur ?>
+    <?= $erreur ?>
 
-<!-- $erreur .= '<div class="alert alert-danger" role="alert">Erreur format pseudo !</div>'; -->
+    <form class="my-5 col-10 mx-auto" method="POST" action="">
 
+        <div class="row">
 
-<form class="my-5 col-10 mx-auto" method="POST" action="">
-
-    <div class="row">
-        <!-- PSEUDO -->
-        <div class="col-md-4 mt-5">
-            <label class="form-label" for="pseudo"><div class="badge badge-dark text-wrap">Pseudo</div></label>
-            <input class="form-control btn btn-outline-success" type="text" name="pseudo" id="pseudo" placeholder="Votre pseudo" max-length="20" pattern="[a-zA-Z0-9-_.]{3,20}" title="caractères acceptés: majuscules et minuscules, chiffres, signes tels que: - _ . , entre trois et vingt caractères." required>
-        </div>
-        <!-- MOT DE PASSE -->
-        <div class="col-md-4 mt-5">
-        <label class="form-label" for="mdp"><div class="badge badge-dark text-wrap">Mot de passe</div></label>
-        <input class="form-control btn btn-outline-success" type="password" name="mdp" id="mdp" placeholder="Votre mot de passe" required>
-        </div>
-        <!-- EMAIL -->
-        <div class="col-md-4 mt-5">
-        <label class="form-label" for="email"><div class="badge badge-dark text-wrap">Email</div></label>
-        <input class="form-control btn btn-outline-success" type="email" name="email" id="email" placeholder="Votre email" required>
-        </div>
-    </div>
-
-    <div class="row">
-        <!-- NOM -->
-        <div class="col-md-4 mt-5">
-            <label class="form-label" for="nom"><div class="badge badge-dark text-wrap">Nom</div></label>
-            <input class="form-control btn btn-outline-success" type="text" name="nom" id="nom" placeholder="Votre nom">
-        </div>
-        <!-- PRENOM -->
-        <div class="col-md-4 mt-5">
-            <label class="form-label" for="prenom"><div class="badge badge-dark text-wrap">Prénom</div></label>
-            <input class="form-control btn btn-outline-success" type="text" name="prenom" id="prenom" placeholder="Votre prénom">
-        </div>
-        <!-- TELEPHONE -->
-        <div class="col-md-4 mt-5">
-            <label class="form-label" for="telephone"><div class="badge badge-dark text-wrap">Telephone</div></label>
-            <input class="form-control btn btn-outline-success" type="text" name="telephone" id="telephone" placeholder="Votre numéro de teléphone">
-        </div>
-        <!-- CIVILITE -->
-        <div class="col-md-4 mt-5 pt-2">
-            <p><div class="badge badge-dark text-wrap">Civilité</div></p> 
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="civilite" id="civilite1" value="femme">
-                <label class="form-check-label mx-2" for="civilite1">Femme</label>
+            <!-- PSEUDO -->
+            <div class="col-md-4 mt-5">
+                <label class="form-label" for="pseudo"><div class="badge badge-dark text-wrap">Pseudo</div></label>
+                <input class="form-control btn btn-outline-dark" type="text" name="pseudo" id="pseudo" placeholder="Votre pseudo" max-length="20" pattern="[a-zA-Z0-9-_.]{3,20}" title="caractères acceptés: majuscules et minuscules, chiffres, signes tels que: - _ . , entre trois et vingt caractères." required>
             </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="civilite" id="civilite2" value="homme" checked>
-                <label class="form-check-label mx-2" for="civilite2">Homme</label>
+
+            <!-- MOT DE PASSE -->
+            <div class="col-md-4 mt-5">
+                <label class="form-label" for="mdp"><div class="badge badge-dark text-wrap">Mot de passe</div></label>
+                <input class="form-control btn btn-outline-dark" type="password" name="mdp" id="mdp" placeholder="Votre mot de passe" required>
+            </div>
+
+            <!-- EMAIL -->
+            <div class="col-md-4 mt-5">
+                <label class="form-label" for="email"><div class="badge badge-dark text-wrap">Email</div></label>
+                <input class="form-control btn btn-outline-dark" type="email" name="email" id="email" placeholder="Votre email" required>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-1 mt-5">
-        <a href="?action=validate">
-            <button type="submit" class="btn btn-lg btn-outline-success">Valider</button>
-        </a>
-    </div>
-    
-</form>
+        <div class="row">
+
+            <!-- NOM -->
+            <div class="col-md-4 mt-5">
+                <label class="form-label" for="nom"><div class="badge badge-dark text-wrap">Nom</div></label>
+                <input class="form-control btn btn-outline-dark" type="text" name="nom" id="nom" placeholder="Votre nom">
+            </div>
+
+            <!-- PRENOM -->
+            <div class="col-md-4 mt-5">
+                <label class="form-label" for="prenom"><div class="badge badge-dark text-wrap">Prénom</div></label>
+                <input class="form-control btn btn-outline-dark" type="text" name="prenom" id="prenom" placeholder="Votre prénom">
+            </div>
+
+            <!-- TELEPHONE -->
+            <div class="col-md-4 mt-5">
+                <label class="form-label" for="telephone"><div class="badge badge-dark text-wrap">Telephone</div></label>
+                <input class="form-control btn btn-outline-dark" type="text" name="telephone" id="telephone" placeholder="Votre numéro de teléphone">
+            </div>
+            
+            <!-- CIVILITE -->
+            <div class="col-md-4 mt-5 pt-2">
+                <p><div class="badge badge-dark text-wrap">Civilité</div></p> 
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="civilite" id="civilite1" value="femme">
+                    <label class="form-check-label mx-2" for="civilite1">Femme</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="civilite" id="civilite2" value="homme" checked>
+                    <label class="form-check-label mx-2" for="civilite2">Homme</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 mt-5">
+            <a href="?action=validate">
+                <button type="submit" class="btn btn-lg btn-outline-dark">Valider</button>
+            </a>
+        </div>
+        
+    </form>
 
 <?php require_once('include/footer.php') ?>

@@ -128,9 +128,7 @@ require_once('includeAdmin/header.php');
 <?= $content ?>
 
 <!-- TITLE GESTION -->
-<h1 class="text-center my-5">
-    <div class="badge badge-success text-wrap p-3">Gestion des utilisateurs</div>
-</h1>
+<h1 class="text-center display-4 my-5 text-wrap p-3">Gestion des membres</h1>
 
 <!-- FORMULAIRE -->
 <?php if (isset($_GET['action'])) : ?>
@@ -216,9 +214,7 @@ require_once('includeAdmin/header.php');
 <!-- NOMBRE DE CATEGORIES EN BDD -->
 <?php $nbUsers = $pdo->query("SELECT id_membre FROM membre"); ?>
 <h2 class="py-5 text-center">Utilisateurs en base de données:</h2>
-<h3 class="text-center display-3">
-    <div class="badge badge-success p-3"><?= $nbUsers->rowCount() ?></div>
-</h3>
+<h3 class="text-center display-2 mb-5 p-3"><?= $nbUsers->rowCount() ?></h3>
 
 <!-- BUTTON D'AJOUT -->
 <div class="col-3 mx-auto py-5">
@@ -296,7 +292,6 @@ require_once('includeAdmin/header.php');
 
 <!-- MODAL DE SUP/MDF-->
 <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

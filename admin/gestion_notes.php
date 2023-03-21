@@ -33,7 +33,6 @@ if (isset($_GET['action'])) {
     $membre_id1  = (isset($noteActuel['membre_id1 '])) ? $noteActuel['membre_id1 '] : "";
     $membre_id2  = (isset($noteActuel['membre_id2 '])) ? $noteActuel['membre_id2 '] : "";
     $note = (isset($noteActuel['note'])) ? $noteActuel['note'] : "";
-    $avis = (isset($noteActuel['avis'])) ? $noteActuel['avis'] : "";
     $date_enregistrement = (isset($noteActuel['date_enregistrement'])) ? $noteActuel['date_enregistrement'] : "";
 
     // REQUETE - DELETE
@@ -50,16 +49,12 @@ require_once('includeAdmin/header.php');
 <?= $content ?>
 
 <!-- TITLE GESTION -->
-<h1 class="text-center my-5">
-    <div class="badge badge-success text-wrap p-3">Gestion de notes</div>
-</h1>
+<h1 class="text-center display-4 my-5 text-wrap p-3">Gestion de notes</h1>
 
 <!-- NOMBRE DE CATEGORIES EN BDD -->
 <?php $nombreNotes = $pdo->query("SELECT id_note FROM note"); ?>
 <h2 class="py-5 text-center">Notes en base de données:</h2>
-<h3 class="text-center display-3">
-    <div class="badge badge-success p-3"><?= $nombreNotes->rowCount() ?></div>
-</h3>
+<h3 class="text-center display-2 mb-5 p-3"><?= $nombreNotes->rowCount() ?></h3>
 
 <!-- TABLEAU DE RESCUPERATION DONNES -->
 <table class="table table-white text-center rounded-1">
@@ -79,7 +74,7 @@ require_once('includeAdmin/header.php');
                 <?php foreach ($user as $key => $value) : ?>
                         <td><?= $value ?></td>
                 <?php endforeach; ?>
-                <td><a data-href="?action=delete&iid_note=<?= $user['id_note'] ?>" data-toggle="modal" data-target="#confirm-delete"><i class="bi bi-trash-fill text-danger" style="font-size: 1.5rem;"></i></a></td>
+                <td><a data-href="?action=delete&id_note=<?= $user['id_note'] ?>" data-toggle="modal" data-target="#confirm-delete"><i class="bi bi-trash-fill text-danger" style="font-size: 1.5rem;"></i></a></td>
             </tr>
         <?php endwhile; ?>
     </tbody>

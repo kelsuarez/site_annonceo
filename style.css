@@ -1,0 +1,39 @@
+.imgLogo{
+    width: 60px !important;
+}
+.shantellSans{
+    font-family: 'Shantell Sans', cursive !important;
+}
+*{
+    font-family: 'Roboto Flex', sans-serif !important;
+}
+.img_annonce_principal{
+    max-width: 600px !important;
+}
+.control_images_annonce{
+    max-width: 250px !important;
+}
+.iframeMap{
+    width: 1000px;
+    height: 200px;
+    border: 0;
+}
+.images_index{
+    width: 400px !important;
+    height: 300px !important;
+}
+
+@media screen and (max-width: 500px) {
+    .img_annonce_principal{
+        max-width: 250px !important;
+    }
+    .iframeMap{
+        width: 250px;
+        height: 250px;
+        border: 0;
+    }
+    .images_index{
+        width: 250px !important;
+        height: 150px !important;
+    }
+}

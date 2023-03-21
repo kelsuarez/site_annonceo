@@ -261,9 +261,7 @@ require_once('includeAdmin/header.php');
 <?= $content ?>
 
 <!-- TITLE GESTION -->
-<h1 class="text-center my-5">
-    <div class="badge badge-success text-wrap p-3">Gestion des annonces</div>
-</h1>
+<h1 class="text-center display-4 my-5 text-dark text-wrap p-3">Gestion des annonces</h1>
 
 <!-- MESSAGE D'INFORMATION -->
 <?php if (!isset($_GET['action']) && !isset($_GET['page'])) : ?>
@@ -276,36 +274,6 @@ require_once('includeAdmin/header.php');
     </div>
 <?php endif; ?>
 
-<!-- AFFICHAGE ANNONCE -->
-<!-- <?php if (isset($_GET['action']) && $_GET['action'] == 'see'): ?>
-    <div class="text-center py-5 col-10 mx-auto">
-        <div class="d-md-flex">
-            <div class="card shadow p-3 mb-5 bg-white rounded">
-                <img src="<?= URL . 'img/' . $detail['photo'] ?>" class="card-img-top maxImg" alt="image du produit">
-                <div>
-                    <img src="<?= URL . 'img/' . $test[''] ?>" alt="">
-                    <img src="" alt="">
-                    <img src="" alt="">
-                    <img src="" alt="">
-                    <img src="" alt="">
-                </div>
-            </div>
-            <div class="col-5 mx-auto text-center">
-                <h1 class=""><?= $detail['titre'] ?></h1>
-                <h2 class="mt-3"><?= $detail['description_courte']?></h2>
-                <p class=""><?= $detail['description_longue']?></p>
-                <h2 class="">Prix: <?= $detail['prix'] . " €" ?></h2>
-            </div>
-        </div>
-        <div class="d-flex mx-auto">
-            <h3>Adresse: <?= $detail['adresse'] . " |"?></h3>
-            <h3 class="ml-2">Ville: <?= $detail['ville'] . " |"?></h3>
-            <h3 class="ml-2">Code-Postal: <?= $detail['cp'] . " |"?></h3>
-            <h3 class="ml-2">Pays: <?= $detail['pays'] ?></h3>
-        </div>
-    </div>
-<?php endif; ?> -->
-
 <!-- FORMULAIRE -->
 <?php if(isset($_GET['action']) && $_GET['action'] != 'see'): ?>
 
@@ -315,10 +283,10 @@ require_once('includeAdmin/header.php');
 
     <form id="monForm" class="my-5 col-12 mx-auto" method="POST" action="" enctype="multipart/form-data">
 
-        <input type="" name="id_annonce" value="<?= $id_annonce  ?>">
-        <input type="" name="membre_id" value="<?= $id_membre?>">
-        <input type="" name="photo_id" value="<?= $photo_id?>">
-        <input type="" name="categorie_id" value="<?= $categorie_id  ?>">
+        <input type="hidden" name="id_annonce" value="<?= $id_annonce  ?>">
+        <input type="hidden" name="membre_id" value="<?= $id_membre?>">
+        <input type="hidden" name="photo_id" value="<?= $photo_id?>">
+        <input type="hidden" name="categorie_id" value="<?= $categorie_id  ?>">
     
         <div class="d-flex mx-auto mt-5">
             <!-- TITRE -->
@@ -425,9 +393,7 @@ require_once('includeAdmin/header.php');
 <!-- NOMBRE DE ANNONCES EN BDD -->
 <?php $nbAnnonces = $pdo->query(" SELECT id_annonce FROM annonce "); ?>
 <h2 class="py-5 text-center">Nombre de annonces en base de données:</h2>
-<h3 class="text-center display-3 mb-5">
-    <div class="badge badge-success p-3"><?= $nbAnnonces->rowCount() ?> </div>
-</h3>
+<h3 class="text-center display-2 mb-5 p-3"><?= $nbAnnonces->rowCount() ?></h3>
 
 <!-- TABLEAU DE RESCUPERATION DONNES -->
 <div class="col-12">
@@ -458,7 +424,6 @@ require_once('includeAdmin/header.php');
                     <?php endforeach; ?>
                     <td><a href='?action=update&id_annonce=<?= $annonce['id_annonce'] ?>'><i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i></a></td>
                     <td><a href='../fiche_annonce.php?id_annonce=<?= $annonce['id_annonce'] ?>'><i class="bi bi-eye" style="font-size: 1.5rem;"></i></a></td>
-                    <!-- <td><a href='?action=see&id_annonce=<?= $annonce['id_annonce'] ?>'><i class="bi bi-eye" style="font-size: 1.5rem;"></i></a></td> -->
                     <td><a data-href="?action=delete&id_annonce=<?= $annonce['id_annonce'] ?>" data-toggle="modal" data-target="#confirm-delete"><i class="bi bi-trash" style="font-size: 1.5rem;"></i></a></td>
                 </tr>
             <?php endwhile; ?>
