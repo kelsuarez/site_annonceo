@@ -14,6 +14,16 @@ if(internauteConnecte()){
     exit();
 }
 
+if(isset($_GET['action']) && $_GET['action'] == 'validate' ){
+    $validate .= '<div class="alert alert-success alert-dismissible fade show mt-5" role="alert mx-auto">
+                        <strong>Félicitations !</strong> Votre inscription est réussie 😉, vous pouvez vous connecter !
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>';
+}
+
+
 if($_POST){
 
     // REQUETTE COMPARATION PSEUDO EN BDD
@@ -30,8 +40,8 @@ if($_POST){
                     $_SESSION['membre'][$key] = $value;
                     if(internauteConnecteAdmin()){
                         header('location:' . URL . 'admin/index.php?action=validate' );
-                    }elseif(isset($_GET['action']) && $_GET['action'] == 'acheter'){
-                        header('location:' . URL . 'panier.php' );
+                    // }elseif(isset($_GET['action']) && $_GET['action'] == 'acheter'){
+                    //     header('location:' . URL . 'panier.php' );
                     }else{
                         header('location:' . URL . 'profil.php?action=validate' );
                     }
