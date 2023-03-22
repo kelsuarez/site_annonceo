@@ -97,7 +97,9 @@ require_once('include/header.php');
 <div class="col-10 mx-auto mt-5">
     <div class="d-lg-flex">
         <div class="col-lg-6">
-            <img class="img-fluid mx-auto img_annonce_principal" id="image-principale" src="<?= URL . 'img/' . $infos_annonce['photo'] ?>" loading="lazy" alt="image de annonce avec le titre <?=$infos_annonce['titre']?>">
+            <?php if(!empty($infos_annonce['photo'])) :?>
+                <img class="img-fluid mx-auto img_annonce_principal" id="image-principale" src="<?= URL . 'img/' . $infos_annonce['photo'] ?>" loading="lazy" alt="image de annonce avec le titre <?=$infos_annonce['titre']?>">
+            <?php endif; ?>
         </div>
         <div class="col-lg-6 text-center mx-auto">
             <h1 class="display-lg-2 mt-2 text-uppercase"><?= $infos_annonce['titre'] ?></h1>
@@ -107,11 +109,13 @@ require_once('include/header.php');
     </div>
     <div class="d-lg-flex col-11 mt-5">
         <div class="mx-auto">
-            <img class="img-fluid mx-auto mr-2 mt-2 control_images_annonce" src="<?= URL . 'img/' . $infos_photos_annexes['photo1'] ?>" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo1'] ?>')" alt="image de annonce avec le titre <?=$infos_annonce['titre']?>">
-            <img class="img-fluid mx-auto mr-2 mt-2 control_images_annonce" src="<?= URL . 'img/' . $infos_photos_annexes['photo2'] ?>" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo2'] ?>')" alt="image de annonce avec le titre <?=$infos_annonce['titre']?>">
-            <img class="img-fluid mx-auto mr-2 mt-2 control_images_annonce" src="<?= URL . 'img/' . $infos_photos_annexes['photo3'] ?>" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo3'] ?>')" alt="image de annonce avec le titre <?=$infos_annonce['titre']?>">
-            <img class="img-fluid mx-auto mr-2 mt-2 control_images_annonce" src="<?= URL . 'img/' . $infos_photos_annexes['photo4'] ?>" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo4'] ?>')" alt="image de annonce avec le titre <?=$infos_annonce['titre']?>">
-            <img class="img-fluid mx-auto mt-2 control_images_annonce" src="<?= URL . 'img/' . $infos_photos_annexes['photo5'] ?>" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo5'] ?>')" alt="image de annonce avec le titre <?=$infos_annonce['titre']?>">
+            
+        <?php for ($i = 1; $i <= 5; $i++): ?>
+            <?php if(!empty($infos_photos_annexes['photo'.$i])):?>
+                <img class="img-fluid mx-auto <?= $i === 5 ? 'mt-2' : 'mr-2 mt-2' ?> control_images_annonce" src="<?= URL . 'img/' . $infos_photos_annexes['photo'.$i] ?>" loading="lazy" onclick="changerImagePrincipale('<?= URL . 'img/' . $infos_photos_annexes['photo'.$i] ?>')" alt="image de annonce avec le titre <?=$infos_annonce['titre']?>">
+            <?php endif; ?>
+        <?php endfor; ?>
+            
         </div>
     </div>
     <div class="d-lg-flex mt-5 mx-auto">

@@ -122,20 +122,28 @@ if(isset($_GET['action'])){
         if(!empty($_FILES['photo']['name'])){
             $photo_nom = uniqid() . '_' . $_FILES['photo']['name'];
             $photoBdd = "$photo_nom";
-            $photoDossier = RACINE_SITE . "img/$photo_nom";
-            if(is_uploaded_file($_FILES['photo']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
-                copy($_FILES['photo']['tmp_name'], $photoDossier);
+            $photoDossier = RACINE_SITE . "/img/$photo_nom";
+            echo "Chemin du dossier de destination: " . $photoDossier;
+            if(is_uploaded_file($_FILES['photo']['tmp_name']) && file_exists(RACINE_SITE . "/img/")){
+                if(copy($_FILES['photo']['tmp_name'], $photoDossier)){
+                    echo "Copie de l'image réussie";
+                } else {
+                    echo "La copie de l'image a échoué";
+                }
             } else {
-                echo "Une erreur est survenue lors du téléchargement du fichier.";
+                echo "Le fichier n'a pas été téléchargé avec succès ou le dossier img n'existe pas";
             }
+        } else {
+            echo "Aucune image n'a été téléchargée";
         }
+
         // A VOIR POUR LES 5 AUTRES PHOTOS
 
         if(!empty($_FILES['photo1']['name'])){
             $photo_nom = uniqid() . '_' . $_FILES['photo1']['name'];
             $photoBdd1 = "$photo_nom";
-            $photoDossier = RACINE_SITE . "img/$photo_nom";
-            if(is_uploaded_file($_FILES['photo1']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+            $photoDossier = RACINE_SITE . "/img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo1']['tmp_name']) && file_exists(RACINE_SITE . "/img/")){
                 copy($_FILES['photo1']['tmp_name'], $photoDossier);
             } else {
                 echo "Une erreur est survenue lors du téléchargement du fichier.";
@@ -144,8 +152,8 @@ if(isset($_GET['action'])){
         if(!empty($_FILES['photo2']['name'])){
             $photo_nom = uniqid() . '_' . $_FILES['photo2']['name'];
             $photoBdd2 = "$photo_nom";
-            $photoDossier = RACINE_SITE . "img/$photo_nom";
-            if(is_uploaded_file($_FILES['photo2']['tmp_name']) && file_exists(RACINE_SITE . "img/")){
+            $photoDossier = RACINE_SITE . "/img/$photo_nom";
+            if(is_uploaded_file($_FILES['photo2']['tmp_name']) && file_exists(RACINE_SITE . "/img/")){
                 copy($_FILES['photo2']['tmp_name'], $photoDossier);
             } else {
                 echo "Une erreur est survenue lors du téléchargement du fichier.";
@@ -622,6 +630,24 @@ require_once('include/header.php');
 
     </form>
     <?php endif; ?>
+
+    <!-- MODAL DE SUP/MDF-->
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Supprimer article
+                </div>
+                <div class="modal-body">
+                    Etes-vous sur de vouloir retirer cet article de votre panier ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
+                    <a class="btn btn-danger btn-ok">Supprimer</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <?php require_once('include/footer.php') ?>
 

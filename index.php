@@ -79,7 +79,9 @@ require_once('include/header.php');
                             <?php //echo debug($fiche_annonce)?>
                             <div class="d-lg-flex mx-auto mt-5">
                                 <div class="col-10 col-lg-6 mx-auto">
-                                    <img class="images_index" src="<?= URL . 'img/' . $fiche_annonce['photo'] ?>" alt="Annonce <?= $fiche_annonce['titre']?>">
+                                    <?php if(!empty($fiche_annonce['photo'])) :?>
+                                        <img class="images_index" src="<?= URL . 'img/' . $fiche_annonce['photo'] ?>" alt="Annonce <?= $fiche_annonce['titre']?>">
+                                    <?php endif; ?>
                                 </div>
                                 <div class="col-10 col-lg-6 mx-auto">
                                         <h3 class="card-title text-center"><?= $fiche_annonce['titre'] ?></h3>
@@ -136,7 +138,9 @@ require_once('include/header.php');
                             <?php //echo debug($prix)?>
                             <div class="d-lg-flex mx-auto mt-5">
                                 <div class="col-10 col-lg-6 mx-auto">
-                                    <img class="images_index" src="<?= URL . 'img/' . $prix['photo'] ?>" alt="Annonce <?= $prix['titre']?>">
+                                    <?php if(!empty($prix['photo'])) :?>
+                                        <img class="images_index" src="<?= URL . 'img/' . $prix['photo'] ?>" alt="Annonce <?= $prix['titre']?>">
+                                    <?php endif;?>
                                 </div>
                                 <div class="col-10 col-lg-6 mx-auto">
                                         <h3 class="card-title text-center"><?= $prix['titre'] ?></h3>
@@ -194,7 +198,9 @@ require_once('include/header.php');
                             <?php //echo debug($ville)?>
                             <div class="d-lg-flex mx-auto mt-5">
                                 <div class="col-10 col-lg-6 mx-auto">
-                                    <img class="images_index" src="<?= URL . 'img/' . $ville['photo'] ?>" alt="Annonce <?=$ville['titre']?>">
+                                    <?php if(!empty($ville['photo'])) :?>
+                                        <img class="images_index" src="<?= URL . 'img/' . $ville['photo'] ?>" alt="Annonce <?=$ville['titre']?>">
+                                    <?php endif; ?>
                                 </div>
                                 <div class="col-10 col-lg-6 mx-auto">
                                         <h3 class="card-title text-center"><?= $ville['titre'] ?></h3>
@@ -243,6 +249,12 @@ require_once('include/header.php');
 
                 <h1 class="d-none d-lg-block text-center display-1 mt-5"><u>ANNONCEO</u></h1>
 
+                <?php if(internauteConnecte()) :?>
+                    <h2 class="text-center mt-5"><i class="bi bi-plus-circle"></i><a class="text-dark" href="profil.php?action=add"> Poster un annonce</a></h2>
+                <?php else : ?>
+                    <h2 class="text-center mt-5"><i class="bi bi-plus-circle"></i><a class="text-dark" href="connexion.php"> Poster un annonce</a></h2>
+                <?php endif; ?>
+
                 <!-- TITRE -->
                     <div class="row justify-content-around">
                         <h2 class="py-5">
@@ -256,7 +268,9 @@ require_once('include/header.php');
                             <?php //echo debug($date_last)?>
                             <div class="d-lg-flex mx-auto mt-5">
                                 <div class="col-10 col-lg-6 mx-auto">
-                                    <img class="images_index" src="<?= URL . 'img/' . $date_last['photo'] ?>" alt="Annonce <?=$date_last['titre']?>">
+                                    <?php if(!empty($date_last['photo'])) :?>
+                                        <img class="images_index" src="<?= URL . 'img/' . $date_last['photo'] ?>" alt="Annonce <?=$date_last['titre']?>">
+                                    <?php endif;?>
                                 </div>
                                 <div class="col-10 col-lg-6 mx-auto">
                                         <h3 class="card-title text-center"><?= $date_last['titre'] ?></h3>
